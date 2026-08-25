@@ -321,3 +321,5 @@ RELEASE_MSG
 # Linux project files
 /Makefile
 /.ignore
+Automation_ScaredyImp.slnx
+ScaredyImp.slnx
