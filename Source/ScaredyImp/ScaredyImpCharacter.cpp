@@ -50,6 +50,13 @@ AScaredyImpCharacter::AScaredyImpCharacter()
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
 
+void AScaredyImpCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+}
+
 void AScaredyImpCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	// Set up action bindings
@@ -62,6 +69,10 @@ void AScaredyImpCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AScaredyImpCharacter::Move);
 		EnhancedInputComponent->BindAction(MouseLookAction, ETriggerEvent::Triggered, this, &AScaredyImpCharacter::Look);
+
+		// Sprint
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &AScaredyImpCharacter::SprintStart);
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &AScaredyImpCharacter::SprintEnd);
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AScaredyImpCharacter::Look);
@@ -130,4 +141,14 @@ void AScaredyImpCharacter::DoJumpEnd()
 {
 	// signal the character to stop jumping
 	StopJumping();
+}
+
+void AScaredyImpCharacter::SprintStart()
+{
+	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
+}
+
+void AScaredyImpCharacter::SprintEnd()
+{
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
