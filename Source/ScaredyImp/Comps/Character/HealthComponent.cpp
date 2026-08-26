@@ -25,7 +25,7 @@ void UHealthComponent::ApplyDamage(int32 DamageAmount)
 
 bool UHealthComponent::IsDead() const
 {
-	return CurrentHealth <= 0;
+	return bIsInitialized && CurrentHealth <= 0;
 }
 
 void UHealthComponent::Heal(int32 HealAmount)
@@ -48,6 +48,13 @@ void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	InitComponent();
+}
+
+void UHealthComponent::InitComponent()
+{
 	CurrentHealth = MaxHealth;
+
+	bIsInitialized = true;
 }
 
