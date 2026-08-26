@@ -10,6 +10,7 @@
 class USpringArmComponent;
 class UCameraComponent;
 class UInputAction;
+class UHealthComponent;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
@@ -32,6 +33,8 @@ class AScaredyImpCharacter : public ACharacter
 	UCameraComponent* FollowCamera;
 	
 protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<UHealthComponent> HealthComponent;
 
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, Category="Input")
