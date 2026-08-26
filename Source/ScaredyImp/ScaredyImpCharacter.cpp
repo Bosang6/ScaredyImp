@@ -58,6 +58,15 @@ void AScaredyImpCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+
+	// Delegate Binding
+	if (HealthComponent)
+	{
+		HealthComponent->OnDeath.AddDynamic(
+			this,
+			&AScaredyImpCharacter::HandleDeath
+		);
+	}
 }
 
 void AScaredyImpCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -102,6 +111,18 @@ void AScaredyImpCharacter::Look(const FInputActionValue& Value)
 
 	// route the input
 	DoLook(LookAxisVector.X, LookAxisVector.Y);
+}
+
+// Disable player input when a character dies.
+void AScaredyImpCharacter::Landed(const FHitResult& Hit)
+{
+	Super::Landed(Hit);
+
+	if (HealthComponent && HealthComponent->IsDead())
+	{
+		GetCharacterMovement()->StopMovementImmediately();
+		GetCharacterMovement()->DisableMovement();
+	}
 }
 
 void AScaredyImpCharacter::DoMove(float Right, float Forward)
@@ -154,4 +175,19 @@ void AScaredyImpCharacter::SprintStart()
 void AScaredyImpCharacter::SprintEnd()
 {
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+}
+
+// Disable player input when a character dies.
+void AScaredyImpCharacter::HandleDeath()
+{
+	StopJumping();
+
+	if (AController* CharacterController = GetController())
+	{
+		CharacterController->SetIgnoreMoveInput(true);
+	}
+
+	// Keep character inertia after death
+	UCharacterMovementComponent* Movement = GetCharacterMovement();
+	Movement->BrakingDecelerationFalling = 0.0f;
 }

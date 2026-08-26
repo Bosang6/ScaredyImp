@@ -82,6 +82,8 @@ protected:
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
 
+	virtual void Landed(const FHitResult& Hit) override;
+
 public:
 
 	/** Handles move inputs from either controls or UI interfaces */
@@ -105,6 +107,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	virtual void SprintEnd();
+
+	// ========== Delegates ==============
+	UFUNCTION()
+	void HandleDeath();
 
 public:
 

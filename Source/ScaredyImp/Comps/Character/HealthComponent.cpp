@@ -10,9 +10,8 @@ UHealthComponent::UHealthComponent()
 
 void UHealthComponent::ApplyDamage(int32 DamageAmount)
 {
-	if (DamageAmount <= 0)
+	if (!bIsInitialized || DamageAmount <= 0.0f || IsDead())
 	{
-		UE_LOG(LogScaredyImp, Warning, TEXT("[ApplyDamage] DamageAmount: %d must be greater than 0."), DamageAmount);
 		return;
 	}
 
@@ -21,6 +20,13 @@ void UHealthComponent::ApplyDamage(int32 DamageAmount)
 		0,
 		MaxHealth
 	);
+
+
+	// Broadcast when a character dies
+	if (IsDead())
+	{
+		OnDeath.Broadcast();
+	}
 }
 
 bool UHealthComponent::IsDead() const

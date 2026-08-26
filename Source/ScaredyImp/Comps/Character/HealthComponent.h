@@ -4,6 +4,8 @@
 #include "Components/ActorComponent.h"
 #include "HealthComponent.generated.h"
 
+// ========== Delegates ==============
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDeath);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SCAREDYIMP_API UHealthComponent : public UActorComponent
@@ -38,6 +40,10 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	int32 GetMaxHealth() const { return MaxHealth; };
+
+	// ========== Delegates ==============
+	UPROPERTY(BlueprintAssignable, Category = "Health")
+	FOnDeath OnDeath;
 
 
 
