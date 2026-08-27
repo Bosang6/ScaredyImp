@@ -2,13 +2,21 @@
 #include "Enemies/EnemyBase.h"
 #include "Comps/HealthComponent.h"
 #include "ScaredyImp.h"
+#include "Components/BoxComponent.h"
+#include "Components/CapsuleComponent.h"
 
 AEnemyBase::AEnemyBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-    HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
+	StompZone = CreateDefaultSubobject<UBoxComponent>(TEXT("StompZone"));
+	StompZone->SetRelativeLocation(FVector(0.0f, 0.0f, 100.0f));
+	StompZone->SetBoxExtent(FVector(35.0f, 35.0f, 10.0f));
+	StompZone->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	StompZone->SetGenerateOverlapEvents(true);
+	StompZone->SetCollisionResponseToAllChannels(ECR_Overlap);
 
+    HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 }
 
 void AEnemyBase::BeginPlay()

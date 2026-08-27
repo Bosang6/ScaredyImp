@@ -7,6 +7,7 @@
 #include "EnemyBase.generated.h"
 
 class UHealthComponent;
+class UBoxComponent;
 
 UCLASS()
 class SCAREDYIMP_API AEnemyBase : public ACharacter, public IStompable
@@ -29,6 +30,8 @@ public:
 	virtual void ReceiveStomp_Implementation(AActor* Stomper, int32 DamageAmount) override;
 
 protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<UBoxComponent> StompZone;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UHealthComponent> HealthComponent;
