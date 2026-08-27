@@ -33,6 +33,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stomp")
 	int32 StompDamage = 1;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stomp")
+	float StompBounceVelocity = 500.0f;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stomp|Collision")
 	FVector StompBoxRelativeLocation = FVector(0.0f, 0.0f, -95.0f);
 

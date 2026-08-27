@@ -96,5 +96,12 @@ void UStompComponent::OnStompBoxBeginOverlap(UPrimitiveComponent* OverlappedComp
 		TEXT("[StompComponent] OtherActor: %s | Component: %s"),
 		*OtherActor->GetName(),
 		*OtherComp->GetName());
+
+	// Jump up after stomping on the enemy
+	Owner->LaunchCharacter(
+		FVector(0.0f, 0.0f, StompBounceVelocity),
+		false,
+		true
+	);
 }
 
