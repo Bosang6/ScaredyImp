@@ -10,7 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
-#include "Comps/Character/HealthComponent.h"
+#include "Comps/HealthComponent.h"
 #include "Comps/StompComponent.h"
 #include "ScaredyImp.h"
 

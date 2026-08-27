@@ -1,6 +1,5 @@
 
-#include "Comps/Character/HealthComponent.h"
-#include "HealthComponent.h"
+#include "Comps/HealthComponent.h"
 #include "ScaredyImp.h"
 
 UHealthComponent::UHealthComponent()
