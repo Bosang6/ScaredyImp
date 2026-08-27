@@ -10,7 +10,7 @@ AEnemyBase::AEnemyBase()
 	PrimaryActorTick.bCanEverTick = true;
 
 	StompZone = CreateDefaultSubobject<UBoxComponent>(TEXT("StompZone"));
-	StompZone->SetRelativeLocation(FVector(0.0f, 0.0f, 100.0f));
+	StompZone->SetupAttachment(GetCapsuleComponent());
 	StompZone->SetBoxExtent(FVector(35.0f, 35.0f, 10.0f));
 	StompZone->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	StompZone->SetGenerateOverlapEvents(true);

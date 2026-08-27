@@ -47,6 +47,8 @@ void UStompComponent::BeginPlay()
 	StompBox->SetBoxExtent(StompBoxExtent);
 	StompBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	StompBox->SetGenerateOverlapEvents(true);
+	StompBox->SetCollisionResponseToAllChannels(ECR_Ignore);
+	StompBox->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Overlap);
 	StompBox->OnComponentBeginOverlap.AddDynamic(this, &UStompComponent::OnStompBoxBeginOverlap);
 
 	UE_LOG(LogScaredyImp, Warning,
@@ -65,10 +67,6 @@ void UStompComponent::OnStompBoxBeginOverlap(UPrimitiveComponent* OverlappedComp
 	{
 		return;
 	}
-
-	UE_LOG(LogScaredyImp, Warning,
-		TEXT("[StompComponent] OtherActor: %s"),
-		*OtherActor->GetName());
 
 	if (!OtherComp)
 	{
@@ -93,5 +91,10 @@ void UStompComponent::OnStompBoxBeginOverlap(UPrimitiveComponent* OverlappedComp
 		Owner,
 		StompDamage
 	);
+
+	UE_LOG(LogScaredyImp, Warning,
+		TEXT("[StompComponent] OtherActor: %s | Component: %s"),
+		*OtherActor->GetName(),
+		*OtherComp->GetName());
 }
 
