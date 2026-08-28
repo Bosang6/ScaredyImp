@@ -20,6 +20,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
+	void OnDeath();
+
 public:	
 	virtual void Tick(float DeltaTime) override;
 
@@ -36,4 +39,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UHealthComponent> HealthComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Death")
+	float DestroyDelay = 2.0f;
+
+	FTimerHandle DestroyTimeHandle;
 };

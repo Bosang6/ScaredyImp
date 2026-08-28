@@ -3,6 +3,7 @@
 #include "Comps/HealthComponent.h"
 #include "ScaredyImp.h"
 #include "Components/BoxComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 
 AEnemyBase::AEnemyBase()
@@ -22,7 +23,37 @@ AEnemyBase::AEnemyBase()
 void AEnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (IsValid(HealthComponent))
+	{
+		HealthComponent->OnDeath.AddDynamic(this, &AEnemyBase::OnDeath);
+	}
 	
+}
+
+void AEnemyBase::OnDeath()
+{
+	// Disable Movement
+	if (TObjectPtr<UCharacterMovementComponent> MovementComponent = GetCharacterMovement())
+	{
+		MovementComponent->StopMovementImmediately();
+		MovementComponent->DisableMovement();
+	}
+
+	// Disable Capsule collision
+	if (TObjectPtr<UCapsuleComponent> CapsuleComp = GetCapsuleComponent())
+	{
+		CapsuleComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+
+	// Disable StompZone collision
+	if (IsValid(StompZone))
+	{
+		StompZone->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+
+	// Destroy enemy after death animation
+	SetLifeSpan(DestroyDelay);
 }
 
 void AEnemyBase::Tick(float DeltaTime)
@@ -56,4 +87,3 @@ void AEnemyBase::ReceiveStomp_Implementation(AActor* Stomper, int32 DamageAmount
 		HealthComponent->GetCurrentHealth()
 	);
 }
-
