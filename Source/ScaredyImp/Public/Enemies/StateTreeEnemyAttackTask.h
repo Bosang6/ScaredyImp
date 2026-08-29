@@ -6,10 +6,15 @@
 #include "Tasks/StateTreeAITask.h"
 #include "StateTreeEnemyAttackTask.generated.h"
 
+class AEnemyBase;
+
 USTRUCT()
 struct FStateTreeEnemyAttackTaskInstanceData
 {
 	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<AEnemyBase> Enemy = nullptr;
 };
 
 USTRUCT(meta = (DisplayName = "Enemy Attack", Category = "AI|Combat"))
@@ -19,6 +24,11 @@ struct SCAREDYIMP_API FStateTreeEnemyAttackTask : public FStateTreeAITaskBase
 
 	using FInstanceDataType = FStateTreeEnemyAttackTaskInstanceData;
 
+	FStateTreeEnemyAttackTask()
+	{
+		bShouldCallTick = true;
+	}
+
 	virtual const UStruct* GetInstanceDataType() const override
 	{
 		return FInstanceDataType::StaticStruct();
@@ -27,5 +37,10 @@ struct SCAREDYIMP_API FStateTreeEnemyAttackTask : public FStateTreeAITaskBase
 	virtual EStateTreeRunStatus EnterState(
 		FStateTreeExecutionContext& Context,
 		const FStateTreeTransitionResult& Transition
+	) const override;
+
+	virtual EStateTreeRunStatus Tick(
+		FStateTreeExecutionContext& Context,
+		float DeltaTime
 	) const override;
 };
