@@ -5,6 +5,7 @@
 #include "Components/BoxComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 AEnemyBase::AEnemyBase()
 {
@@ -75,13 +76,21 @@ void AEnemyBase::OnAttackHitBoxBeginOverlap(UPrimitiveComponent* OverlappedCompo
 
 	if (!IsValid(OtherActor) || OtherActor == this) return;
 
+	if (HitActorsThisAttack.Contains(OtherActor)) return;
+
+	APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0);
+
+	if (OtherActor != PlayerPawn) return;
+
+	// First Hit
+	HitActorsThisAttack.Add(OtherActor);
+
 	UE_LOG(LogScaredyImp, Warning, TEXT("[Enemy: %s] AttackHitBox Hit: %s"), *GetName(), *OtherActor->GetName());
 }
 
 void AEnemyBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
@@ -115,6 +124,9 @@ void AEnemyBase::Attack()
 	if (bIsAttacking) return;
 
 	bIsAttacking = true;
+
+	// A new attack begins, clearing the hit record of the previous attack.
+	HitActorsThisAttack.Empty();
 
 	if (IsValid(AttackHitBox))
 	{

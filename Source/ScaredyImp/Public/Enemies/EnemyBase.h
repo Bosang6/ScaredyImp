@@ -70,5 +70,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
 	bool bIsAttacking = false;
 
+	// Each attack will only be counted once.
+	UPROPERTY(Transient)
+	TSet<TObjectPtr<AActor>> HitActorsThisAttack;
+
 	FTimerHandle DestroyTimeHandle;
 };
