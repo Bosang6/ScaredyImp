@@ -8,6 +8,7 @@
 
 class UAIPerceptionComponent;
 class UStateTreeAIComponent;
+class UAISenseConfig_Sight;
 
 /**
  * 
@@ -21,9 +22,21 @@ public:
 	AEnemyAIController();
 
 protected:
+	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	void OnTargetPerceptionUpdate(AActor* Actor, FAIStimulus Stimulus);
+
+protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 	TObjectPtr<UAIPerceptionComponent> EnemyPerceptionComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 	TObjectPtr<UStateTreeAIComponent> StateTreeAIComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	TObjectPtr<UAISenseConfig_Sight> SightConfig;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "AI")
+	TObjectPtr<AActor> TargetActor;
 };
