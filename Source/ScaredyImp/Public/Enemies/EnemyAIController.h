@@ -37,6 +37,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 	TObjectPtr<UAISenseConfig_Sight> SightConfig;
 
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "AI")
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "AI", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<AActor> TargetActor;
 };
