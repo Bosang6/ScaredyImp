@@ -23,6 +23,16 @@ protected:
 	UFUNCTION()
 	void OnDeath();
 
+	UFUNCTION()
+	void OnAttackHitBoxBeginOverlap(
+		UPrimitiveComponent* OverlappedComponent,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex,
+		bool bFromSweep,
+		const FHitResult& SweepResult
+	);
+
 public:	
 	virtual void Tick(float DeltaTime) override;
 
@@ -32,6 +42,18 @@ public:
 	// Interfaces Implementation
 	virtual void ReceiveStomp_Implementation(AActor* Stomper, int32 DamageAmount) override;
 
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void Attack();
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void EndAttack();
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void OnAttackHit();
+
+	UFUNCTION(BlueprintPure, Category = "Combat")
+	bool IsAttacking() const { return bIsAttacking; }
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UBoxComponent> StompZone;
@@ -39,8 +61,14 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UHealthComponent> HealthComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	TObjectPtr<UBoxComponent> AttackHitBox;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Death")
 	float DestroyDelay = 2.0f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	bool bIsAttacking = false;
 
 	FTimerHandle DestroyTimeHandle;
 };

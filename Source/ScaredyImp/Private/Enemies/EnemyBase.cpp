@@ -18,6 +18,14 @@ AEnemyBase::AEnemyBase()
 	StompZone->SetCollisionResponseToAllChannels(ECR_Overlap);
 
     HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
+
+	AttackHitBox = CreateDefaultSubobject<UBoxComponent>(TEXT("AttackHitBox"));
+	AttackHitBox->SetupAttachment(GetMesh(), TEXT("AttackSocket"));
+	AttackHitBox->SetBoxExtent(FVector(20.0f, 20.0f, 20.0f));
+	AttackHitBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	AttackHitBox->SetGenerateOverlapEvents(true);
+	AttackHitBox->SetCollisionResponseToAllChannels(ECR_Ignore);
+	AttackHitBox->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 }
 
 void AEnemyBase::BeginPlay()
@@ -27,6 +35,11 @@ void AEnemyBase::BeginPlay()
 	if (IsValid(HealthComponent))
 	{
 		HealthComponent->OnDeath.AddDynamic(this, &AEnemyBase::OnDeath);
+	}
+
+	if (IsValid(AttackHitBox))
+	{
+		AttackHitBox->OnComponentBeginOverlap.AddDynamic(this, &AEnemyBase::OnAttackHitBoxBeginOverlap);
 	}
 	
 }
@@ -54,6 +67,15 @@ void AEnemyBase::OnDeath()
 
 	// Destroy enemy after death animation
 	SetLifeSpan(DestroyDelay);
+}
+
+void AEnemyBase::OnAttackHitBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (!bIsAttacking) return;
+
+	if (!IsValid(OtherActor) || OtherActor == this) return;
+
+	UE_LOG(LogScaredyImp, Warning, TEXT("[Enemy: %s] AttackHitBox Hit: %s"), *GetName(), *OtherActor->GetName());
 }
 
 void AEnemyBase::Tick(float DeltaTime)
@@ -86,4 +108,39 @@ void AEnemyBase::ReceiveStomp_Implementation(AActor* Stomper, int32 DamageAmount
 		DamageAmount,
 		HealthComponent->GetCurrentHealth()
 	);
+}
+
+void AEnemyBase::Attack()
+{
+	if (bIsAttacking) return;
+
+	bIsAttacking = true;
+
+	if (IsValid(AttackHitBox))
+	{
+		AttackHitBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	}
+
+	UE_LOG(LogScaredyImp, Warning, TEXT("[Enemy: %s] Attack started"), *GetName());
+}
+
+void AEnemyBase::EndAttack()
+{
+	if (!bIsAttacking) return;
+
+	bIsAttacking = false;
+
+	if (IsValid(AttackHitBox))
+	{
+		AttackHitBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+
+	UE_LOG(LogScaredyImp, Warning, TEXT("[Enemy: %s] Attack ended"), *GetName());
+}
+
+void AEnemyBase::OnAttackHit()
+{
+	if (!bIsAttacking) return;
+
+	UE_LOG(LogScaredyImp, Warning, TEXT("[Enemy: %s] Attack Hit"), *GetName());
 }
