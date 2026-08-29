@@ -6,6 +6,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Comps/HealthComponent.h"
 
 AEnemyBase::AEnemyBase()
 {
@@ -84,6 +85,11 @@ void AEnemyBase::OnAttackHitBoxBeginOverlap(UPrimitiveComponent* OverlappedCompo
 
 	// First Hit
 	HitActorsThisAttack.Add(OtherActor);
+
+	// Apply Damage to Character
+	UHealthComponent* TargetHealthComponent = OtherActor->FindComponentByClass<UHealthComponent>();
+	if (!IsValid(TargetHealthComponent)) return;
+	TargetHealthComponent->ApplyDamage(AttackDamage);
 
 	UE_LOG(LogScaredyImp, Warning, TEXT("[Enemy: %s] AttackHitBox Hit: %s"), *GetName(), *OtherActor->GetName());
 }
