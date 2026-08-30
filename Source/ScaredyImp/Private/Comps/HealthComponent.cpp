@@ -26,6 +26,10 @@ void UHealthComponent::ApplyDamage(int32 DamageAmount)
 	{
 		OnDeath.Broadcast();
 	}
+	else
+	{
+		OnDamaged.Broadcast();
+	}
 
 	UE_LOG(LogScaredyImp, Warning, TEXT("Current HP: %d"), CurrentHealth);
 }

@@ -6,6 +6,7 @@
 
 // ========== Delegates ==============
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDeath);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDamaged);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SCAREDYIMP_API UHealthComponent : public UActorComponent
@@ -44,6 +45,9 @@ public:
 	// ========== Delegates ==============
 	UPROPERTY(BlueprintAssignable, Category = "Health")
 	FOnDeath OnDeath;
+
+	UPROPERTY(BlueprintAssignable, Category = "Health")
+	FOnDamaged OnDamaged;
 
 
 
