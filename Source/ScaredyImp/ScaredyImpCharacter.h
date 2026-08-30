@@ -66,6 +66,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
 	float RunSpeed = 800.0f;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	bool bIsHit = false;
+
 public:
 
 	/** Constructor */
@@ -112,9 +115,18 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	virtual void SprintEnd();
 
+	UFUNCTION(BlueprintPure, Category = "Combat")
+	bool IsHit() const { return bIsHit; }
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void EndHit();
+
 	// ========== Delegates ==============
 	UFUNCTION()
 	void HandleDeath();
+
+	UFUNCTION()
+	void OnDamaged();
 
 public:
 

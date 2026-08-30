@@ -67,6 +67,10 @@ void AScaredyImpCharacter::BeginPlay()
 			this,
 			&AScaredyImpCharacter::HandleDeath
 		);
+		HealthComponent->OnDamaged.AddDynamic(
+			this,
+			&AScaredyImpCharacter::OnDamaged
+		);
 	}
 }
 
@@ -178,6 +182,11 @@ void AScaredyImpCharacter::SprintEnd()
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
 
+void AScaredyImpCharacter::EndHit()
+{
+	bIsHit = false;
+}
+
 // Disable player input when a character dies.
 void AScaredyImpCharacter::HandleDeath()
 {
@@ -191,4 +200,9 @@ void AScaredyImpCharacter::HandleDeath()
 	// Keep character inertia after death
 	UCharacterMovementComponent* Movement = GetCharacterMovement();
 	Movement->BrakingDecelerationFalling = 0.0f;
+}
+
+void AScaredyImpCharacter::OnDamaged()
+{
+	bIsHit = true;
 }
