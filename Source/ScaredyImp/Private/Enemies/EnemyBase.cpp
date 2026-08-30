@@ -76,6 +76,12 @@ void AEnemyBase::OnDamaged()
 {
 	if (!IsValid(HealthComponent) || HealthComponent->IsDead()) return;
 
+	// Cancel attack after being stomped.
+	if (bIsAttacking)
+	{
+		EndAttack();
+	}
+
 	bIsHit = true;
 
 	UE_LOG(LogScaredyImp, Warning, TEXT("[Enemy: %s] Get Hit"), *GetName());
