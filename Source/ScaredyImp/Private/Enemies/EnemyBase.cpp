@@ -37,6 +37,7 @@ void AEnemyBase::BeginPlay()
 	if (IsValid(HealthComponent))
 	{
 		HealthComponent->OnDeath.AddDynamic(this, &AEnemyBase::OnDeath);
+		HealthComponent->OnDamaged.AddDynamic(this, &AEnemyBase::OnDamaged);
 	}
 
 	if (IsValid(AttackHitBox))
@@ -69,6 +70,15 @@ void AEnemyBase::OnDeath()
 
 	// Destroy enemy after death animation
 	SetLifeSpan(DestroyDelay);
+}
+
+void AEnemyBase::OnDamaged()
+{
+	if (!IsValid(HealthComponent) || HealthComponent->IsDead()) return;
+
+	bIsHit = true;
+
+	UE_LOG(LogScaredyImp, Warning, TEXT("[Enemy: %s] Get Hit"), *GetName());
 }
 
 void AEnemyBase::OnAttackHitBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -161,4 +171,11 @@ void AEnemyBase::OnAttackHit()
 	if (!bIsAttacking) return;
 
 	UE_LOG(LogScaredyImp, Warning, TEXT("[Enemy: %s] Attack Hit"), *GetName());
+}
+
+void AEnemyBase::EndHit()
+{
+	bIsHit = false;
+
+	UE_LOG(LogScaredyImp, Warning, TEXT("[Enemy: %s] Hit End"), *GetName());
 }

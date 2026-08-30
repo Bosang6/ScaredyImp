@@ -24,6 +24,9 @@ protected:
 	void OnDeath();
 
 	UFUNCTION()
+	void OnDamaged();
+
+	UFUNCTION()
 	void OnAttackHitBoxBeginOverlap(
 		UPrimitiveComponent* OverlappedComponent,
 		AActor* OtherActor,
@@ -54,6 +57,12 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Combat")
 	bool IsAttacking() const { return bIsAttacking; }
 
+	UFUNCTION(BlueprintPure, Category = "Combat")
+	bool IsHit() const { return bIsHit; }
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void EndHit();
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UBoxComponent> StompZone;
@@ -72,6 +81,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	int32 AttackDamage = 1;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	bool bIsHit = false;
 
 	// Each attack will only be counted once.
 	UPROPERTY(Transient)
