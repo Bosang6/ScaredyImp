@@ -97,10 +97,25 @@ void UStompComponent::OnStompBoxBeginOverlap(UPrimitiveComponent* OverlappedComp
 		*OtherActor->GetName(),
 		*OtherComp->GetName());
 
+	// Get backward direction
+	FVector HorizontalVelocity = Owner->GetVelocity();
+	HorizontalVelocity.Z = 0.0f;
+	FVector BackwardDirection = -HorizontalVelocity.GetSafeNormal();
+
+	if (BackwardDirection.IsNearlyZero())
+	{
+		BackwardDirection = -Owner->GetActorForwardVector();
+		BackwardDirection.Z = 0.0f;
+		BackwardDirection.Normalize();
+	}
+
 	// Jump up after stomping on the enemy
 	Owner->LaunchCharacter(
-		FVector(0.0f, 0.0f, StompBounceVelocity),
-		false,
+		FVector(
+			BackwardDirection.X * StompBounceHorizontalVelocity,
+			BackwardDirection.Y * StompBounceHorizontalVelocity,
+			StompBounceVerticalVelocity),
+		true,
 		true
 	);
 }
