@@ -3,7 +3,6 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/WorldSubsystem.h"
-#include "Checkpoint/CheckpointTypes.h"
 #include "CheckpointSubsystem.generated.h"
 
 UCLASS()
@@ -27,7 +26,7 @@ public:
 
 	// Checkpoint
 	UFUNCTION(BlueprintCallable, Category = "Checkpoint")
-	void ActivateCheckpoint(const FCheckpointData& CheckpointData);
+	void ActivateCheckpoint(const FTransform& RespawnTransform);
 
 	UFUNCTION(BlueprintCallable, Category = "Checkpoint")
 	void ResetCheckpoint();
@@ -36,7 +35,7 @@ public:
 	bool HasActiveCheckpoint() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Checkpoint")
-	const FCheckpointData& GetCurrentCheckpoint() const;
+	const FTransform& GetCurrentCheckpoint() const;
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Level Start", meta = (AllowPrivateAccess = "true"))
@@ -46,7 +45,7 @@ private:
 	bool bHasLevelStart = false;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Checkpoint", meta = (AllowPrivateAccess = "true"))
-	FCheckpointData CurrentCheckpoint;
+	FTransform CurrentCheckpoint = FTransform::Identity;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Checkpoint", meta = (AllowPrivateAccess = "true"))
 	bool bHasActiveCheckpoint = false;

@@ -46,11 +46,8 @@ void ACheckpoint::OnTriggerBoxBeginOverlap(UPrimitiveComponent* OverlappedCompon
 		return;
 	}
 
-	// Record CheckpointData
-	FCheckpointData CheckpointData;
-	CheckpointData.RespawnTransform = RespawnPoint->GetComponentTransform();
-	
-	CheckpointSubsystem->ActivateCheckpoint(CheckpointData);
+	// Record checkpoint
+	CheckpointSubsystem->ActivateCheckpoint(RespawnPoint->GetComponentTransform());
 
 	UE_LOG(LogScaredyImp, Warning, TEXT("[Checkpoint] Activate."));
 }

@@ -1,2 +1,0 @@
-
-#include "Checkpoint/CheckpointTypes.h"

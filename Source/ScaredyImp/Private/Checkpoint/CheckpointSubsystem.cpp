@@ -6,7 +6,7 @@ FTransform UCheckpointSubsystem::GetRecoveryTransform() const
 {
 	if (bHasActiveCheckpoint)
 	{
-		return CurrentCheckpoint.RespawnTransform;
+		return CurrentCheckpoint;
 	}
 
 	return LevelStartTransform;
@@ -35,15 +35,15 @@ const FTransform& UCheckpointSubsystem::GetLevelStartTransform() const
 	return LevelStartTransform;
 }
 
-void UCheckpointSubsystem::ActivateCheckpoint(const FCheckpointData& CheckpointData)
+void UCheckpointSubsystem::ActivateCheckpoint(const FTransform& RespawnTransform)
 {
-	CurrentCheckpoint = CheckpointData;
+	CurrentCheckpoint = RespawnTransform;
 	bHasActiveCheckpoint = true;
 }
 
 void UCheckpointSubsystem::ResetCheckpoint()
 {
-	CurrentCheckpoint = FCheckpointData();
+	CurrentCheckpoint = FTransform::Identity;
 	bHasActiveCheckpoint = false;
 }
 
@@ -52,7 +52,7 @@ bool UCheckpointSubsystem::HasActiveCheckpoint() const
 	return bHasActiveCheckpoint;
 }
 
-const FCheckpointData& UCheckpointSubsystem::GetCurrentCheckpoint() const
+const FTransform& UCheckpointSubsystem::GetCurrentCheckpoint() const
 {
 	return CurrentCheckpoint;
 }
