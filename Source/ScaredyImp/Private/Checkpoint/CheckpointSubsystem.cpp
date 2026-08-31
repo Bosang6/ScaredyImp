@@ -1,5 +1,6 @@
 
 #include "Checkpoint/CheckpointSubsystem.h"
+#include "ScaredyImp.h"
 
 FTransform UCheckpointSubsystem::GetRecoveryTransform() const
 {
@@ -15,6 +16,13 @@ void UCheckpointSubsystem::SetLevelStart(const FTransform& Transform)
 {
 	LevelStartTransform = Transform;
 	bHasLevelStart = true;
+
+	UE_LOG(
+		LogScaredyImp, 
+		Warning, 
+		TEXT("[CheckpointSubsystem] Level Start registered: %s"),
+		*LevelStartTransform.GetLocation().ToString()
+	);
 }
 
 bool UCheckpointSubsystem::HasLevelStart() const

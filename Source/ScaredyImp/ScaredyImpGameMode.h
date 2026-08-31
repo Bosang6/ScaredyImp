@@ -1,4 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -18,6 +17,9 @@ public:
 	
 	/** Constructor */
 	AScaredyImpGameMode();
+
+protected:
+	virtual void BeginPlay() override;
 };
 
 
