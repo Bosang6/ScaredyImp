@@ -122,7 +122,7 @@ public:
 	void EndHit();
 
 	// ========== Interfaces =============
-	virtual void HandleVoid() override;
+	virtual void HandleVoid_Implementation() override;
 
 	// ========== Delegates ==============
 	UFUNCTION()

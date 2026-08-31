@@ -187,7 +187,7 @@ void AScaredyImpCharacter::EndHit()
 	bIsHit = false;
 }
 
-void AScaredyImpCharacter::HandleVoid()
+void AScaredyImpCharacter::HandleVoid_Implementation()
 {
 	UE_LOG(LogScaredyImp, Warning, TEXT("[Player] HandleVoid"));
 }

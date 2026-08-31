@@ -18,5 +18,6 @@ class SCAREDYIMP_API IVoidRecoverable
 	GENERATED_BODY()
 
 public:
-	virtual void HandleVoid() = 0;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Void")
+	void HandleVoid();
 };
