@@ -13,6 +13,7 @@
 #include "Comps/HealthComponent.h"
 #include "Comps/StompComponent.h"
 #include "ScaredyImp.h"
+#include "Checkpoint/CheckpointSubsystem.h"
 
 AScaredyImpCharacter::AScaredyImpCharacter()
 {
@@ -189,6 +190,26 @@ void AScaredyImpCharacter::EndHit()
 
 void AScaredyImpCharacter::HandleVoid_Implementation()
 {
+	if (!IsValid(HealthComponent)) return;
+
+	// Void deals 1 damage
+	HealthComponent->ApplyDamage(1);
+
+	// ApplyDamage() will broadcast OnDeath if HP reaches 0.
+	// Do not recover to checkpoint in this case.
+	if (HealthComponent->IsDead()) return;
+
+	UCheckpointSubsystem* CheckpointSubsystem = GetWorld()->GetSubsystem<UCheckpointSubsystem>();
+	if (!IsValid(CheckpointSubsystem)) return;
+
+	// Clear falling velocity before moving back to a safe position.
+	if (UCharacterMovementComponent* MovementComponent = GetCharacterMovement())
+	{
+		MovementComponent->StopMovementImmediately();
+	}
+
+	SetActorTransform(CheckpointSubsystem->GetRecoveryTransform());
+
 	UE_LOG(LogScaredyImp, Warning, TEXT("[Player] HandleVoid"));
 }
 
