@@ -19,6 +19,16 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
+	void OnTriggerBoxBeginOverlap(
+		UPrimitiveComponent* OverlappedComponent,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex,
+		bool bFromSweep,
+		const FHitResult& SweepResult
+	);
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Checkpoint")
 	TObjectPtr<USceneComponent> Root;
@@ -28,8 +38,5 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Checkpoint")
 	TObjectPtr<USceneComponent> RespawnPoint;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Checkpoint")
-	FName Checkpoint = NAME_None;
 
 };

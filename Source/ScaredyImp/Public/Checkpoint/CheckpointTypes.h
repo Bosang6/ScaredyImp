@@ -11,9 +11,6 @@ struct FCheckpointData
 	GENERATED_BODY()
 
 	UPROPERTY(BlueprintReadOnly, Category = "Checkpoint")
-	FName CheckPointID = NAME_None;
-
-	UPROPERTY(BlueprintReadOnly, Category = "Checkpoint")
 	FTransform RespawnTransform = FTransform::Identity;
 	
 };
