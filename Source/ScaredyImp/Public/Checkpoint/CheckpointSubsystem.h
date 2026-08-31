@@ -13,6 +13,20 @@ class SCAREDYIMP_API UCheckpointSubsystem : public UWorldSubsystem
 	
 public:
 	UFUNCTION(BlueprintCallable, Category = "Checkpoint")
+	FTransform GetRecoveryTransform() const;
+
+	// Level Start
+	UFUNCTION(BlueprintCallable, Category = "Level Start")
+	void SetLevelStart(const FTransform& Transform);
+
+	UFUNCTION(BlueprintCallable, Category = "Level Start")
+	bool HasLevelStart() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Level Start")
+	const FTransform& GetLevelStartTransform() const;
+
+	// Checkpoint
+	UFUNCTION(BlueprintCallable, Category = "Checkpoint")
 	void ActivateCheckpoint(const FCheckpointData& CheckpointData);
 
 	UFUNCTION(BlueprintCallable, Category = "Checkpoint")
@@ -25,6 +39,12 @@ public:
 	const FCheckpointData& GetCurrentCheckpoint() const;
 
 private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Level Start", meta = (AllowPrivateAccess = "true"))
+	FTransform LevelStartTransform = FTransform::Identity;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Level Start", meta = (AllowPrivateAccess = "true"))
+	bool bHasLevelStart = false;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Checkpoint", meta = (AllowPrivateAccess = "true"))
 	FCheckpointData CurrentCheckpoint;
 
