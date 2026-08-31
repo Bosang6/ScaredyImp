@@ -18,6 +18,7 @@ public:
 	/** Constructor */
 	AScaredyImpGameMode();
 
+	void RespawnPlayerAtLevelStart(AController* Controller);
 protected:
 	virtual void BeginPlay() override;
 };
