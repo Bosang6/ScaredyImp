@@ -1,10 +1,10 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "Interfaces/VoidRecoverable.h"
 #include "ScaredyImpCharacter.generated.h"
 
 class USpringArmComponent;
@@ -21,7 +21,7 @@ DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
  *  Implements a controllable orbiting camera
  */
 UCLASS(abstract)
-class AScaredyImpCharacter : public ACharacter
+class AScaredyImpCharacter : public ACharacter, public IVoidRecoverable
 {
 	GENERATED_BODY()
 
@@ -120,6 +120,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void EndHit();
+
+	// ========== Interfaces =============
+	virtual void HandleVoid() override;
 
 	// ========== Delegates ==============
 	UFUNCTION()

@@ -187,6 +187,11 @@ void AScaredyImpCharacter::EndHit()
 	bIsHit = false;
 }
 
+void AScaredyImpCharacter::HandleVoid()
+{
+	UE_LOG(LogScaredyImp, Warning, TEXT("[Player] HandleVoid"));
+}
+
 // Disable player input when a character dies.
 void AScaredyImpCharacter::HandleDeath()
 {
