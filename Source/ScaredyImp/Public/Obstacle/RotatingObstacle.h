@@ -5,7 +5,7 @@
 #include "Obstacle/ObstacleBase.h"
 #include "RotatingObstacle.generated.h"
 
-class UObstacleRotationComponent;
+class URotatingMovementComponent;
 
 UCLASS()
 class SCAREDYIMP_API ARotatingObstacle : public AObstacleBase
@@ -17,5 +17,5 @@ public:
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obstacle")
-	TObjectPtr<UObstacleRotationComponent> RotationComponent;
+	TObjectPtr<URotatingMovementComponent> RotatingMovementComponent;
 };

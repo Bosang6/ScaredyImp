@@ -1,8 +1,11 @@
 
 #include "Obstacle/RotatingObstacle.h"
-#include "Comps/ObstacleRotationComponent.h"
+#include "GameFramework/RotatingMovementComponent.h"
 
 ARotatingObstacle::ARotatingObstacle()
 {
-	RotationComponent = CreateDefaultSubobject<UObstacleRotationComponent>(TEXT("RotationComponent"));
+	RotatingMovementComponent = CreateDefaultSubobject<URotatingMovementComponent>(TEXT("RotatingMovementComponent"));
+	RotatingMovementComponent->SetUpdatedComponent(ObstacleRoot);
+	RotatingMovementComponent->RotationRate = FRotator(0.0f, 90.0f, 0.0f);
+	RotatingMovementComponent->bRotationInLocalSpace = true;
 }
