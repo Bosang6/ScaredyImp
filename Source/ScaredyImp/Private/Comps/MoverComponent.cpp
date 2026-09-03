@@ -44,7 +44,7 @@ void UMoverComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 	if (!IsValid(Owner)) return;
 
-	Phase += DeltaTime;
+	Phase += DeltaTime * Speed;
 	Phase = FMath::Fmod(Phase, 2.0f * PI);
 
 	const float CurrentAlpha = (FMath::Sin(Phase) + 1.0f) * 0.5f;
