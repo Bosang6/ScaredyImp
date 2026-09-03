@@ -1,10 +1,8 @@
 
 #include "Obstacle/RotatingObstacle.h"
-#include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/RotatingMovementComponent.h"
-#include "Kismet/KismetMathLibrary.h"
 #include "ScaredyImp.h"
 
 ARotatingObstacle::ARotatingObstacle()
