@@ -12,5 +12,6 @@ AObstacleBase::AObstacleBase()
 
 	ObstacleMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	ObstacleMesh->SetupAttachment(ObstacleRoot);
+	ObstacleMesh->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 }
 
