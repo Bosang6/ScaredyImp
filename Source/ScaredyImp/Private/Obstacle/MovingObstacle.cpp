@@ -1,6 +1,6 @@
+#include "Obstacle/MovingObstacle.h"
 #include "Comps/MoverComponent.h"
 
-#include "Obstacle/MovingObstacle.h"
 
 AMovingObstacle::AMovingObstacle()
 {
