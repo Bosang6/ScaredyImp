@@ -7,6 +7,7 @@
 // ========== Delegates ==============
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDeath);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDamaged);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, int32, CurrentHealth);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SCAREDYIMP_API UHealthComponent : public UActorComponent
@@ -18,7 +19,7 @@ protected:
 	bool bIsInitialized = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
-	int32 MaxHealth = 3;
+	int32 MaxHealth = 5;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Health")
 	int32 CurrentHealth = 0;
@@ -35,6 +36,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	void Heal(int32 HealAmount);
 
+	UFUNCTION(BlueprintPure, Category = "Health")
+	bool IsFullHealth() const;
+
 	// Getters
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	int32 GetCurrentHealth() const { return CurrentHealth; };
@@ -49,6 +53,8 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Health")
 	FOnDamaged OnDamaged;
 
+	UPROPERTY(BlueprintAssignable, Category = "Health")
+	FOnHealthChanged OnHealthChanged;
 
 
 protected:
