@@ -11,6 +11,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "Comps/HealthComponent.h"
+#include "Comps/CoinComponent.h"
 #include "Comps/StompComponent.h"
 #include "ScaredyImp.h"
 #include "Checkpoint/CheckpointSubsystem.h"
@@ -50,6 +51,7 @@ AScaredyImpCharacter::AScaredyImpCharacter()
 	FollowCamera->bUsePawnControlRotation = false;
 
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
+	CoinComponent = CreateDefaultSubobject<UCoinComponent>(TEXT("CoinComponent"));
 	StompComponent = CreateDefaultSubobject<UStompComponent>(TEXT("StompComponent"));
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)

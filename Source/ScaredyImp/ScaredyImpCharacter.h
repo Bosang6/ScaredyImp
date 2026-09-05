@@ -11,6 +11,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class UInputAction;
 class UHealthComponent;
+class UCoinComponent;
 class UStompComponent;
 struct FInputActionValue;
 
@@ -36,6 +37,9 @@ class AScaredyImpCharacter : public ACharacter, public IVoidRecoverable
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UHealthComponent> HealthComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<UCoinComponent> CoinComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UStompComponent> StompComponent;
