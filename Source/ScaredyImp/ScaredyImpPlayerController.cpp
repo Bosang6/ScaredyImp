@@ -1,35 +1,29 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 
 #include "ScaredyImpPlayerController.h"
 #include "EnhancedInputSubsystems.h"
 #include "Engine/LocalPlayer.h"
 #include "InputMappingContext.h"
-#include "Blueprint/UserWidget.h"
 #include "ScaredyImp.h"
-#include "Widgets/Input/SVirtualJoystick.h"
+#include "UI/HUDWidget.h"
 
 void AScaredyImpPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// only spawn touch controls on local player controllers
-	if (IsLocalPlayerController() && ShouldUseTouchControls())
+	if (!IsLocalPlayerController()) return;
+
+	if (HUDWidgetClass)
 	{
-		// spawn the mobile controls widget
-		MobileControlsWidget = CreateWidget<UUserWidget>(this, MobileControlsWidgetClass);
+		HUDWidget = CreateWidget<UHUDWidget>(this, HUDWidgetClass);
 
-		if (MobileControlsWidget)
+		if (IsValid(HUDWidget))
 		{
-			// add the controls to the player screen
-			MobileControlsWidget->AddToPlayerScreen(0);
-
-		} else {
-
-			UE_LOG(LogScaredyImp, Error, TEXT("Could not spawn mobile controls widget."));
-
+			HUDWidget->AddToPlayerScreen(0);
 		}
-
+		else
+		{
+			UE_LOG(LogScaredyImp, Error, TEXT("Could not spawn HUD widget."));
+		}
 	}
 }
 
@@ -47,21 +41,6 @@ void AScaredyImpPlayerController::SetupInputComponent()
 			{
 				Subsystem->AddMappingContext(CurrentContext, 0);
 			}
-
-			// only add these IMCs if we're not using mobile touch input
-			if (!ShouldUseTouchControls())
-			{
-				for (UInputMappingContext* CurrentContext : MobileExcludedMappingContexts)
-				{
-					Subsystem->AddMappingContext(CurrentContext, 0);
-				}
-			}
 		}
 	}
-}
-
-bool AScaredyImpPlayerController::ShouldUseTouchControls() const
-{
-	// are we on a mobile platform? Should we force touch?
-	return SVirtualJoystick::ShouldDisplayTouchInterface() || bForceTouchControls;
 }
