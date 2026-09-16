@@ -47,6 +47,9 @@ void UPlayerStatusWidget::UnbindFromCharacter()
 
 	BoundHealthComponent->OnHealthChanged.RemoveDynamic(this, &UPlayerStatusWidget::OnHealthChanged);
 	BoundHealthComponent = nullptr;
+
+	BoundCoinComponent->OnCoinChanged.RemoveDynamic(this, &UPlayerStatusWidget::OnCoinChanged);
+	BoundCoinComponent = nullptr;
 }
 
 void UPlayerStatusWidget::NativeConstruct()
