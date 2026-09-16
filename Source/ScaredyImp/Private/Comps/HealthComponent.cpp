@@ -32,7 +32,7 @@ void UHealthComponent::ApplyDamage(int32 DamageAmount)
 	}
 
 	// For UI
-	OnHealthChanged.Broadcast(CurrentHealth);
+	OnHealthChanged.Broadcast(CurrentHealth, MaxHealth);
 
 	UE_LOG(LogScaredyImp, Warning, TEXT("Current HP: %d"), CurrentHealth);
 }
@@ -57,7 +57,7 @@ void UHealthComponent::Heal(int32 HealAmount)
 	);
 
 	// For UI
-	OnHealthChanged.Broadcast(CurrentHealth);
+	OnHealthChanged.Broadcast(CurrentHealth, MaxHealth);
 }
 
 bool UHealthComponent::IsFullHealth() const
