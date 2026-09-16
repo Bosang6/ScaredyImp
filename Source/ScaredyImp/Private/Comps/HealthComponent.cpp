@@ -76,6 +76,9 @@ void UHealthComponent::InitComponent()
 {
 	CurrentHealth = MaxHealth;
 
+	// For UI
+	OnHealthChanged.Broadcast(CurrentHealth, MaxHealth);
+
 	bIsInitialized = true;
 }
 
