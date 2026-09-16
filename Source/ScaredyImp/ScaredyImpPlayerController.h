@@ -15,8 +15,12 @@ class AScaredyImpPlayerController : public APlayerController
 
 protected:
 	virtual void BeginPlay() override;
-
 	virtual void SetupInputComponent() override;
+
+	virtual void OnPossess(APawn* InPawn) override;
+	virtual void OnUnPossess() override;
+
+	void RefreshHUDBinding();
 	
 protected:
 	UPROPERTY(EditAnywhere, Category ="Input|Input Mappings")

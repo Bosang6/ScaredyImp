@@ -5,6 +5,7 @@
 #include "InputMappingContext.h"
 #include "ScaredyImp.h"
 #include "UI/HUDWidget.h"
+#include "ScaredyImpCharacter.h"
 
 void AScaredyImpPlayerController::BeginPlay()
 {
@@ -19,6 +20,9 @@ void AScaredyImpPlayerController::BeginPlay()
 		if (IsValid(HUDWidget))
 		{
 			HUDWidget->AddToPlayerScreen(0);
+
+			// Bind current character to HUD
+			RefreshHUDBinding();
 		}
 		else
 		{
@@ -48,4 +52,31 @@ void AScaredyImpPlayerController::SetupInputComponent()
 			}
 		}
 	}
+}
+
+void AScaredyImpPlayerController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+
+	RefreshHUDBinding();
+}
+
+void AScaredyImpPlayerController::OnUnPossess()
+{
+	if (IsValid(HUDWidget))
+	{
+		HUDWidget->UnbindFromCharacter();
+	}
+
+	Super::OnUnPossess();
+}
+
+void AScaredyImpPlayerController::RefreshHUDBinding()
+{
+	if (!IsValid(HUDWidget)) return;
+
+	AScaredyImpCharacter* PlayerCharacter = Cast<AScaredyImpCharacter>(GetPawn());
+	if (!IsValid(PlayerCharacter)) return;
+
+	HUDWidget->BindToCharacter(PlayerCharacter);
 }
