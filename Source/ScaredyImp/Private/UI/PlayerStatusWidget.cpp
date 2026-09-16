@@ -1,8 +1,10 @@
 
 #include "UI/PlayerStatusWidget.h"
 #include "UI/HealthBarWidget.h"
+#include "UI/CoinWidget.h"
 #include "ScaredyImpCharacter.h"
 #include "Comps/HealthComponent.h"
+#include "Comps/CoinComponent.h"
 
 void UPlayerStatusWidget::BindToCharacter(AScaredyImpCharacter* Character)
 {
@@ -11,18 +13,32 @@ void UPlayerStatusWidget::BindToCharacter(AScaredyImpCharacter* Character)
 	// Avoid duplicate binding
 	UnbindFromCharacter();
 
+	// ======================= Health =============================================
 	BoundHealthComponent = Character->GetHealthComponent();
-	if (!IsValid(BoundHealthComponent)) return;
+	if (IsValid(BoundHealthComponent))
+	{
+		BoundHealthComponent->OnHealthChanged.AddDynamic(this, &UPlayerStatusWidget::OnHealthChanged);
 
-	BoundHealthComponent->OnHealthChanged.AddDynamic(this, &UPlayerStatusWidget::OnHealthChanged);
+		if (IsValid(HealthBarWidget))
+		{
+			HealthBarWidget->SetHealth(
+				BoundHealthComponent->GetCurrentHealth(),
+				BoundHealthComponent->GetMaxHealth()
+			);
+		}
+	}
 
-	// Init UI
-	if (!IsValid(HealthBarWidget)) return;
+	// ======================= Coin =============================================
+	BoundCoinComponent = Character->GetCoinComponent();
+	if (IsValid(BoundCoinComponent))
+	{
+		BoundCoinComponent->OnCoinChanged.AddDynamic(this, &UPlayerStatusWidget::OnCoinChanged);
 	
-	HealthBarWidget->SetHealth(
-		BoundHealthComponent->GetCurrentHealth(),
-		BoundHealthComponent->GetMaxHealth()
-	);
+		if (IsValid(CoinWidget))
+		{
+			CoinWidget->SetCoinCount(BoundCoinComponent->GetCoinCount());
+		}
+	}
 }
 
 void UPlayerStatusWidget::UnbindFromCharacter()
@@ -47,6 +63,9 @@ void UPlayerStatusWidget::OnHealthChanged(int32 CurrentHealth, int32 MaxHealth)
 	HealthBarWidget->SetHealth(CurrentHealth, MaxHealth);
 }
 
-void UPlayerStatusWidget::OnCoinChanged()
+void UPlayerStatusWidget::OnCoinChanged(int32 CurrentCoin)
 {
+	if (!IsValid(BoundCoinComponent) || !IsValid(CoinWidget)) return;
+
+	CoinWidget->SetCoinCount(CurrentCoin);
 }

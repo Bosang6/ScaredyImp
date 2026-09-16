@@ -8,6 +8,8 @@
 class AScaredyImpCharacter;
 class UHealthBarWidget;
 class UHealthComponent;
+class UCoinWidget;
+class UCoinComponent;
 
 UCLASS()
 class SCAREDYIMP_API UPlayerStatusWidget : public UUserWidget
@@ -26,7 +28,7 @@ private:
 	void OnHealthChanged(int32 CurrentHealth, int32 MaxHealth);
 
 	UFUNCTION()
-	void OnCoinChanged();
+	void OnCoinChanged(int32 CurrentCoin);
 
 protected:
 	UPROPERTY(meta = (BindWidget))
@@ -34,4 +36,10 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<UHealthComponent> BoundHealthComponent;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UCoinWidget> CoinWidget;
+
+	UPROPERTY()
+	TObjectPtr<UCoinComponent> BoundCoinComponent;
 };
