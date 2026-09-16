@@ -78,6 +78,9 @@ public:
 	/** Constructor */
 	AScaredyImpCharacter();	
 
+	FORCEINLINE UHealthComponent* GetHealthComponent() const { return HealthComponent;}
+	FORCEINLINE UCoinComponent* GetCoinComponent() const { return CoinComponent; }
+
 protected:
 
 	virtual void BeginPlay() override;
