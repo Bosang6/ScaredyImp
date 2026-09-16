@@ -5,6 +5,8 @@
 #include "Components/ActorComponent.h"
 #include "CoinComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCoinChanged, int32, CurrentCoin);
+
 class UHealthComponent;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -23,6 +25,10 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+public:
+	UPROPERTY(BlueprintAssignable, Category = "Coin")
+	FOnCoinChanged OnCoinChanged;
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Coin", meta = (ClampMin = "1"))

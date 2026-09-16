@@ -15,6 +15,9 @@ void UCoinComponent::AddCoin(int32 Amount)
 
 	CoinCount += Amount;
 
+	// For UI
+	OnCoinChanged.Broadcast(CoinCount);
+
 	UE_LOG(LogScaredyImp, Log, TEXT("[CoinComponent] CoinCount: %d"), CoinCount);
 
 	if (CoinCount > 0 && CoinCount % CoinPerHeal == 0)
