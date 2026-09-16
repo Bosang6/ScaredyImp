@@ -25,6 +25,11 @@ void AScaredyImpPlayerController::BeginPlay()
 			UE_LOG(LogScaredyImp, Error, TEXT("Could not spawn HUD widget."));
 		}
 	}
+
+	FInputModeGameOnly InputMode;
+	SetInputMode(InputMode);
+
+	bShowMouseCursor = false;
 }
 
 void AScaredyImpPlayerController::SetupInputComponent()
