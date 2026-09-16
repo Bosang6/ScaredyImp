@@ -7,6 +7,7 @@
 
 class AScaredyImpCharacter;
 class UHealthBarWidget;
+class UHealthComponent;
 
 UCLASS()
 class SCAREDYIMP_API UPlayerStatusWidget : public UUserWidget
@@ -22,7 +23,7 @@ protected:
 
 private:
 	UFUNCTION()
-	void OnHealthChanged();
+	void OnHealthChanged(int32 CurrentHealth, int32 MaxHealth);
 
 	UFUNCTION()
 	void OnCoinChanged();
@@ -31,4 +32,6 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UHealthBarWidget> HealthBarWidget;
 
+	UPROPERTY()
+	TObjectPtr<UHealthComponent> BoundHealthComponent;
 };
