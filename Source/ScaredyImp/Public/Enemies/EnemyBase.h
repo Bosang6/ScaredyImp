@@ -63,6 +63,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void EndHit();
 
+	FORCEINLINE UHealthComponent* GetHealthComponent() const { return HealthComponent; };
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UBoxComponent> StompZone;
