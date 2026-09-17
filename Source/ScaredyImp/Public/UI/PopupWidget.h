@@ -18,8 +18,8 @@ class SCAREDYIMP_API UPopupWidget : public UUserWidget
 public:
 	void SetupPopup(
 		const FText& InTitle,
-		const FText& InContext,
-		const FText& InConfirmeText,
+		const FText& InContent,
+		const FText& InConfirmText,
 		const FText& InCancelText
 	);
 
