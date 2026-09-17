@@ -9,6 +9,8 @@ class ABlockingWall;
 class UBoxComponent;
 class ACharacter;
 class UHealthComponent;
+class AEnemyBase;
+class AScaredyImpPlayerController;
 
 UCLASS()
 class SCAREDYIMP_API ABossEncounter : public AActor
@@ -41,9 +43,13 @@ protected:
 		const FHitResult& SweepResult
 	);
 
+private:
+	void ShowBossHUD();
+	void HideBossHUD();
+
 protected:
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Boss Encounter")
-	TObjectPtr<AActor> Boss;
+	TObjectPtr<AEnemyBase> Boss;
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Boss Encounter")
 	TArray<TObjectPtr<ABlockingWall>> BlockingWalls;
@@ -53,6 +59,9 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<UHealthComponent> PlayerHealthComponent;
+
+	UPROPERTY()
+	TObjectPtr<AScaredyImpPlayerController> PlayerController;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Boss Encounter")
 	bool bEncounterStarted = false;

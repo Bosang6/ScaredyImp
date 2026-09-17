@@ -15,7 +15,6 @@ void UBossStatusWidget::BindToBoss(AEnemyBase* Boss)
 	if (!IsValid(BoundHealthComponent)) return;
 
 	BoundHealthComponent->OnHealthChanged.AddDynamic(this, &UBossStatusWidget::OnHealthChanged);
-	BoundHealthComponent->OnDeath.AddDynamic(this, &UBossStatusWidget::OnBossDeath);
 
 	if (!IsValid(HealthBarWidget)) return;
 	HealthBarWidget->SetHealth(
@@ -29,7 +28,6 @@ void UBossStatusWidget::UnbindFromBoss()
 	if (!IsValid(BoundHealthComponent)) return;
 
 	BoundHealthComponent->OnHealthChanged.RemoveDynamic(this, &UBossStatusWidget::OnHealthChanged);
-	BoundHealthComponent->OnDeath.RemoveDynamic(this, &UBossStatusWidget::OnBossDeath);
 	BoundHealthComponent = nullptr;
 }
 
@@ -45,9 +43,4 @@ void UBossStatusWidget::OnHealthChanged(int32 CurrentHealth, int32 MaxHealth)
 	if (!IsValid(BoundHealthComponent) || !IsValid(HealthBarWidget)) return;
 
 	HealthBarWidget->SetHealth(CurrentHealth, MaxHealth);
-}
-
-void UBossStatusWidget::OnBossDeath()
-{
-	UnbindFromBoss();
 }

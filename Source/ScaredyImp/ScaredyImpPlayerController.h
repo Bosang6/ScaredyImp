@@ -7,11 +7,16 @@
 
 class UInputMappingContext;
 class UHUDWidget;
+class AEnemyBase;
 
 UCLASS(abstract)
 class AScaredyImpPlayerController : public APlayerController
 {
 	GENERATED_BODY()
+
+public:
+	void ShowBossStatus(AEnemyBase* Boss);
+	void HideBossStatus();
 
 protected:
 	virtual void BeginPlay() override;

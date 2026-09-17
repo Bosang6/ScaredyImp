@@ -23,9 +23,6 @@ protected:
 
 	UFUNCTION()
 	void OnHealthChanged(int32 CurrentHealth, int32 MaxHealth);
-
-	UFUNCTION()
-	void OnBossDeath();
 	
 protected:
 	UPROPERTY(meta = (BindWidget))

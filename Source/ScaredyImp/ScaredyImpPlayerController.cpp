@@ -6,6 +6,21 @@
 #include "ScaredyImp.h"
 #include "UI/HUDWidget.h"
 #include "ScaredyImpCharacter.h"
+#include "Enemies/EnemyBase.h"
+
+void AScaredyImpPlayerController::ShowBossStatus(AEnemyBase* Boss)
+{
+	if (!IsValid(HUDWidget) || !IsValid(Boss)) return;
+
+	HUDWidget->ShowBossStatus(Boss);
+}
+
+void AScaredyImpPlayerController::HideBossStatus()
+{
+	if (!IsValid(HUDWidget)) return;
+
+	HUDWidget->HideBossStatus();
+}
 
 void AScaredyImpPlayerController::BeginPlay()
 {

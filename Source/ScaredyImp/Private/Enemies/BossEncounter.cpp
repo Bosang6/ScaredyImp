@@ -4,6 +4,8 @@
 #include "Comps/HealthComponent.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/Character.h"
+#include "ScaredyImpPlayerController.h"
+#include "Enemies/EnemyBase.h"
 
 ABossEncounter::ABossEncounter()
 {
@@ -35,6 +37,19 @@ void ABossEncounter::BeginPlay()
 void ABossEncounter::OnBossDeath()
 {
 	DeactivateWalls();
+
+	HideBossHUD();
+
+	if (IsValid(PlayerHealthComponent))
+	{
+		PlayerHealthComponent->OnDeath.RemoveDynamic(this, &ABossEncounter::OnPlayerDeath);
+
+		PlayerHealthComponent = nullptr;
+	}
+
+	PlayerController = nullptr;
+
+	bEncounterStarted = false;
 }
 
 void ABossEncounter::OnPlayerDeath()
@@ -58,6 +73,8 @@ void ABossEncounter::StartEncounter(ACharacter* PlayerCharacter)
 	{
 		PlayerHealthComponent->OnDeath.AddUniqueDynamic(this, &ABossEncounter::OnPlayerDeath);
 	}
+
+	ShowBossHUD();
 }
 
 void ABossEncounter::ResetEncounter()
@@ -65,6 +82,8 @@ void ABossEncounter::ResetEncounter()
 	bEncounterStarted = false;
 
 	DeactivateWalls();
+
+	HideBossHUD();
 
 	TriggerBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 
@@ -74,6 +93,8 @@ void ABossEncounter::ResetEncounter()
 
 		PlayerHealthComponent = nullptr;
 	}
+
+	PlayerController = nullptr;
 }
 
 void ABossEncounter::ActivateWalls()
@@ -106,5 +127,23 @@ void ABossEncounter::OnTriggerBeginOverlap(UPrimitiveComponent* OverlappedCompon
 
 	if (!Character || !Character->IsPlayerControlled()) return;
 
+	PlayerController = Cast<AScaredyImpPlayerController>(Character->GetController());
+
+	if (!IsValid(PlayerController)) return;
+
 	StartEncounter(Character);
+}
+
+void ABossEncounter::ShowBossHUD()
+{
+	if (!IsValid(PlayerController) || !IsValid(Boss)) return;
+
+	PlayerController->ShowBossStatus(Boss);
+}
+
+void ABossEncounter::HideBossHUD()
+{
+	if (!IsValid(PlayerController)) return;
+
+	PlayerController->HideBossStatus();
 }
