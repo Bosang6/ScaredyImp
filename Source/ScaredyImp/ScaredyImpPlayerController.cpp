@@ -7,6 +7,8 @@
 #include "UI/HUDWidget.h"
 #include "ScaredyImpCharacter.h"
 #include "Enemies/EnemyBase.h"
+#include "Engine/LocalPlayer.h"
+#include "UI/ScaredyImpUISubsystem.h"
 
 void AScaredyImpPlayerController::ShowBossStatus(AEnemyBase* Boss)
 {
@@ -25,6 +27,12 @@ void AScaredyImpPlayerController::HideBossStatus()
 void AScaredyImpPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (UScaredyImpUISubsystem* UISubsystem =
+		ULocalPlayer::GetSubsystemFromController<UScaredyImpUISubsystem>(this))
+	{
+		UISubsystem->SetUIContext(EScaredyImpUIContext::Gameplay);
+	}
 
 	if (!IsLocalPlayerController()) return;
 
