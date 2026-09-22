@@ -10,7 +10,7 @@ class UBoxComponent;
 class ACharacter;
 class UHealthComponent;
 class AEnemyBase;
-class AScaredyImpPlayerController;
+class UScaredyImpUISubsystem;
 
 UCLASS()
 class SCAREDYIMP_API ABossEncounter : public AActor
@@ -61,7 +61,7 @@ protected:
 	TObjectPtr<UHealthComponent> PlayerHealthComponent;
 
 	UPROPERTY()
-	TObjectPtr<AScaredyImpPlayerController> PlayerController;
+	TObjectPtr<UScaredyImpUISubsystem> UISubsystem;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Boss Encounter")
 	bool bEncounterStarted = false;

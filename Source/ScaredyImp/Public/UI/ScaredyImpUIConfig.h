@@ -6,6 +6,7 @@
 #include "ScaredyImpUIConfig.generated.h"
 
 class UUserWidget;
+class UHUDWidget;
 
 UCLASS()
 class SCAREDYIMP_API UScaredyImpUIConfig : public UDataAsset
@@ -17,7 +18,7 @@ public:
 	TSubclassOf<UUserWidget> MainMenuWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI|HUD")
-	TSubclassOf<UUserWidget> GameplayHUDWidgetClass;
+	TSubclassOf<UHUDWidget> GameplayHUDWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI|Pause")
 	TSubclassOf<UUserWidget> PauseMenuWidgetClass;

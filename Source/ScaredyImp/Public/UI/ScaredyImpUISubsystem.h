@@ -6,6 +6,9 @@
 #include "ScaredyImpUISubsystem.generated.h"
 
 class UScaredyImpUIConfig;
+class UHUDWidget;
+class AEnemyBase;
+class APawn;
 
 UENUM()
 enum class EScaredyImpUIContext : uint8
@@ -32,9 +35,27 @@ public:
 
 	EScaredyImpUIContext GetUIContext() const { return CurrentUIContext; }
 
+	void ShowGameplayHUD();
+	void HideGameplayHUD();
+
+	void ShowBossStatus(AEnemyBase* Boss);
+	void HideBossStatus();
+
+private:
+	void BindToPlayerController(APlayerController* PlayerController);
+	void UnbindFromPlayerController();
+
+	UFUNCTION()
+	void OnPossessedPawnChanged(APawn* OldPawn, APawn* NewPawn);
+
 private:
 	EScaredyImpUIContext CurrentUIContext = EScaredyImpUIContext::None;
 
 	UPROPERTY(Transient)
 	TObjectPtr<UScaredyImpUIConfig> UIConfig;
+
+	UPROPERTY(Transient)
+	TObjectPtr<UHUDWidget> GameplayHUDWidget;
+
+	TWeakObjectPtr<APlayerController> BoundPlayerController;
 };

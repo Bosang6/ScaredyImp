@@ -4,8 +4,10 @@
 #include "Comps/HealthComponent.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/Character.h"
-#include "ScaredyImpPlayerController.h"
 #include "Enemies/EnemyBase.h"
+#include "Engine/LocalPlayer.h"
+#include "GameFramework/PlayerController.h"
+#include "UI/ScaredyImpUISubsystem.h"
 
 ABossEncounter::ABossEncounter()
 {
@@ -47,7 +49,7 @@ void ABossEncounter::OnBossDeath()
 		PlayerHealthComponent = nullptr;
 	}
 
-	PlayerController = nullptr;
+	UISubsystem = nullptr;
 
 	bEncounterStarted = false;
 }
@@ -94,7 +96,7 @@ void ABossEncounter::ResetEncounter()
 		PlayerHealthComponent = nullptr;
 	}
 
-	PlayerController = nullptr;
+	UISubsystem = nullptr;
 }
 
 void ABossEncounter::ActivateWalls()
@@ -127,23 +129,25 @@ void ABossEncounter::OnTriggerBeginOverlap(UPrimitiveComponent* OverlappedCompon
 
 	if (!Character || !Character->IsPlayerControlled()) return;
 
-	PlayerController = Cast<AScaredyImpPlayerController>(Character->GetController());
+	APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());
+	if (!IsValid(PlayerController) || !PlayerController->IsLocalPlayerController()) return;
 
-	if (!IsValid(PlayerController)) return;
+	UISubsystem = ULocalPlayer::GetSubsystemFromController<UScaredyImpUISubsystem>(PlayerController);
+	if (!IsValid(UISubsystem)) return;
 
 	StartEncounter(Character);
 }
 
 void ABossEncounter::ShowBossHUD()
 {
-	if (!IsValid(PlayerController) || !IsValid(Boss)) return;
+	if (!IsValid(UISubsystem) || !IsValid(Boss)) return;
 
-	PlayerController->ShowBossStatus(Boss);
+	UISubsystem->ShowBossStatus(Boss);
 }
 
 void ABossEncounter::HideBossHUD()
 {
-	if (!IsValid(PlayerController)) return;
+	if (!IsValid(UISubsystem)) return;
 
-	PlayerController->HideBossStatus();
+	UISubsystem->HideBossStatus();
 }
