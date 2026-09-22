@@ -1,12 +1,37 @@
 
 #include "UI/ScaredyImpUISubsystem.h"
 #include "GameFramework/PlayerController.h"
+#include "UI/ScaredyImpUIConfig.h"
+#include "UI/ScaredyImpUISettings.h"
 
 void UScaredyImpUISubsystem::Initialize(FSubsystemCollectionBase& CollectionBase)
 {
 	Super::Initialize(CollectionBase);
 
-	UE_LOG(LogTemp, Log, TEXT("ScaredyImpUISubsystem initialized."));
+	// Get Project Settings
+	const UScaredyImpUISettings* UISettings = GetDefault<UScaredyImpUISettings>();
+
+	if (IsValid(UISettings))
+	{
+		UIConfig = UISettings->UIConfig.LoadSynchronous();
+	}
+
+	if (!IsValid(UIConfig))
+	{
+		UE_LOG(
+			LogTemp,
+			Error,
+			TEXT("Failed to load ScaredyImp UI Config.")
+		);
+		return;
+	}
+
+	UE_LOG(
+		LogTemp,
+		Log,
+		TEXT("ScaredyImpUISubsystem initialized with UI Config: %s"),
+		*UIConfig->GetName()
+	);
 }
 
 void UScaredyImpUISubsystem::Deinitialize()

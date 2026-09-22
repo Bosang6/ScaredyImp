@@ -5,6 +5,8 @@
 #include "Subsystems/LocalPlayerSubsystem.h"
 #include "ScaredyImpUISubsystem.generated.h"
 
+class UScaredyImpUIConfig;
+
 UENUM()
 enum class EScaredyImpUIContext : uint8
 {
@@ -32,4 +34,7 @@ public:
 
 private:
 	EScaredyImpUIContext CurrentUIContext = EScaredyImpUIContext::None;
+
+	UPROPERTY(Transient)
+	TObjectPtr<UScaredyImpUIConfig> UIConfig;
 };

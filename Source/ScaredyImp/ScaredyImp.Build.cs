@@ -18,8 +18,9 @@ public class ScaredyImp : ModuleRules
 			"StateTreeModule",
 			"GameplayStateTreeModule",
 			"UMG",
-			"Slate"
-		});
+			"Slate",
+            "DeveloperSettings"
+        });
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });
 
