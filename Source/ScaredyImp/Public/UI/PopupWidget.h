@@ -8,7 +8,14 @@
 class UTextBlock;
 class UButton;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPopupResult, bool, bConfirmed);
+UENUM(BlueprintType)
+enum class EPopupType : uint8
+{
+	GameOver,
+	Victory,
+	ConfirmNewGame,
+	ConfirmQuit
+};
 
 UCLASS()
 class SCAREDYIMP_API UPopupWidget : public UUserWidget
@@ -16,6 +23,7 @@ class SCAREDYIMP_API UPopupWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	UFUNCTION(BlueprintCallable, Category = "Popup")
 	void SetupPopup(
 		const FText& InTitle,
 		const FText& InContent,
@@ -23,18 +31,17 @@ public:
 		const FText& InCancelText
 	);
 
-	UPROPERTY(BlueprintAssignable, Category = "Popup")
-	FOnPopupResult OnPopupResult;
-
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
-	UFUNCTION()
+	UFUNCTION(BlueprintNativeEvent, Category = "Popup")
 	void OnConfirmClicked();
+	virtual void OnConfirmClicked_Implementation();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintNativeEvent, Category = "Popup")
 	void OnCancelClicked();
+	virtual void OnCancelClicked_Implementation();
 
 protected:
 	UPROPERTY(meta = (BindWidget))

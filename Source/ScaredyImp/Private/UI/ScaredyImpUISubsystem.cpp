@@ -4,9 +4,10 @@
 #include "UI/ScaredyImpUIConfig.h"
 #include "UI/ScaredyImpUISettings.h"
 #include "UI/HUDWidget.h"
-#include "UI/ScaredyImpUIConfig.h"
+#include "UI/PopupWidget.h"
 #include "ScaredyImpCharacter.h"
 #include "Enemies/EnemyBase.h"
+#include "Comps/HealthComponent.h"
 
 void UScaredyImpUISubsystem::Initialize(FSubsystemCollectionBase& CollectionBase)
 {
@@ -26,16 +27,16 @@ void UScaredyImpUISubsystem::Initialize(FSubsystemCollectionBase& CollectionBase
 	// Ensure binding is valid
 	if (APlayerController* PlayerController = GetOwningPlayerController())
 	{
-		BindToPlayerController(PlayerController);
+		UpdatePlayerControllerBinding(PlayerController);
 	}
 }
 
 void UScaredyImpUISubsystem::Deinitialize()
 {
+	ClearRuntimeUI();
+
 	// Stop listening to the current PlayerController
 	UnbindFromPlayerController();
-
-	HideGameplayHUD();
 
 	UIConfig = nullptr;
 
@@ -46,14 +47,15 @@ void UScaredyImpUISubsystem::PlayerControllerChanged(APlayerController* NewPlaye
 {
 	Super::PlayerControllerChanged(NewPlayerController);
 
-	// Stop listening to the previous controller
-	UnbindFromPlayerController();
+	// Remove UI belonging to the previous World / PlayerController.
+	ClearRuntimeUI();
 
-	// Start listening to the new controller
-	if (IsValid(NewPlayerController))
-	{
-		BindToPlayerController(NewPlayerController);
-	}
+	if (!IsValid(NewPlayerController)) return;
+
+	UpdatePlayerControllerBinding(NewPlayerController);
+
+	// Rebuild UI for the current context.
+	RebuildCurrentUI();
 }
 
 APlayerController* UScaredyImpUISubsystem::GetOwningPlayerController() const
@@ -70,39 +72,11 @@ void UScaredyImpUISubsystem::SetUIContext(EScaredyImpUIContext NewContext)
 {
 	if (CurrentUIContext == NewContext) return;
 
-	// Exit old context
-	switch (CurrentUIContext)
-	{
-		case EScaredyImpUIContext::MainMenu:
-			// TODO
-			// ...
-			break;
-
-		case EScaredyImpUIContext::Gameplay:
-			HideGameplayHUD();
-			break;
-
-		default:
-			break;
-	}
+	ExitUIContext(CurrentUIContext);
 
 	CurrentUIContext = NewContext;
 
-	// Enter new context
-	switch (CurrentUIContext)
-	{
-		case EScaredyImpUIContext::MainMenu:
-			// TODO
-			// ...
-			break;
-
-		case EScaredyImpUIContext::Gameplay:
-			ShowGameplayHUD();
-			break;
-
-		default:
-			break;
-	}
+	EnterUIContext(NewContext);
 }
 
 void UScaredyImpUISubsystem::ShowGameplayHUD()
@@ -124,19 +98,16 @@ void UScaredyImpUISubsystem::ShowGameplayHUD()
 
 	GameplayHUDWidget->AddToPlayerScreen(0);
 
-	// Ensure that the Character is bound immediately after the HUD is created.
-	OnPossessedPawnChanged(
-		nullptr,
-		PlayerController->GetPawn()
-	);
+	BindToCharacter(Cast<AScaredyImpCharacter>(PlayerController->GetPawn()));
 }
 
 void UScaredyImpUISubsystem::HideGameplayHUD()
 {
-	if (!IsValid(GameplayHUDWidget)) return;
-
-	GameplayHUDWidget->UnbindFromCharacter();
-	GameplayHUDWidget->RemoveFromParent();
+	if (IsValid(GameplayHUDWidget))
+	{
+		GameplayHUDWidget->UnbindFromCharacter();
+		GameplayHUDWidget->RemoveFromParent();
+	}
 	GameplayHUDWidget = nullptr;
 }
 
@@ -152,6 +123,101 @@ void UScaredyImpUISubsystem::HideBossStatus()
 	if (!IsValid(GameplayHUDWidget)) return;
 
 	GameplayHUDWidget->HideBossStatus();
+}
+
+UPopupWidget* UScaredyImpUISubsystem::ShowPopup(EPopupType PopupType)
+{
+	if (!IsValid(UIConfig)) return nullptr;
+
+	const TSubclassOf<UPopupWidget>* PopupClass = UIConfig->PopupWidgetClasses.Find(PopupType);
+
+	if (!PopupClass || !(*PopupClass)) return nullptr;
+
+	ClosePopup();
+
+	APlayerController* PlayerController = GetOwningPlayerController();
+	if (!IsValid(PlayerController)) return nullptr;
+	ActivePopupWidget = CreateWidget<UPopupWidget>(PlayerController, *PopupClass);
+
+	if (!IsValid(ActivePopupWidget)) return nullptr;
+
+	ActivePopupWidget->AddToPlayerScreen(10);
+
+	return ActivePopupWidget;
+}
+
+void UScaredyImpUISubsystem::ClosePopup()
+{
+	if (IsValid(ActivePopupWidget))
+	{
+		ActivePopupWidget->RemoveFromParent();
+	}
+	ActivePopupWidget = nullptr;
+}
+
+void UScaredyImpUISubsystem::OnPlayerDeath()
+{
+	ShowPopup(EPopupType::GameOver);
+}
+
+void UScaredyImpUISubsystem::EnterUIContext(EScaredyImpUIContext Context)
+{
+	// Enter new context
+	switch (CurrentUIContext)
+	{
+		case EScaredyImpUIContext::MainMenu:
+			// TODO
+			// ...
+			break;
+
+		case EScaredyImpUIContext::Gameplay:
+			ShowGameplayHUD();
+			break;
+
+		default:
+			break;
+	}
+}
+
+void UScaredyImpUISubsystem::ExitUIContext(EScaredyImpUIContext Context)
+{
+	switch (CurrentUIContext)
+	{
+		case EScaredyImpUIContext::MainMenu:
+			// TODO
+			// ...
+			break;
+
+		case EScaredyImpUIContext::Gameplay:
+			HideGameplayHUD();
+			break;
+
+		default:
+			break;
+	}
+}
+
+void UScaredyImpUISubsystem::ClearRuntimeUI()
+{
+	ClosePopup();
+	HideGameplayHUD();
+}
+
+void UScaredyImpUISubsystem::RebuildCurrentUI()
+{
+	EnterUIContext(CurrentUIContext);
+}
+
+void UScaredyImpUISubsystem::UpdatePlayerControllerBinding(APlayerController* NewPlayerController)
+{
+	if (BoundPlayerController.Get() == NewPlayerController) return;
+
+	UnbindFromPlayerController();
+
+	if (IsValid(NewPlayerController))
+	{
+		BindToPlayerController(NewPlayerController);
+	}
 }
 
 void UScaredyImpUISubsystem::BindToPlayerController(APlayerController* PlayerController)
@@ -172,25 +238,51 @@ void UScaredyImpUISubsystem::UnbindFromPlayerController()
 {
 	APlayerController* PlayerController = BoundPlayerController.Get();
 
-	if (IsValid(PlayerController))
+	if (!IsValid(PlayerController))
 	{
-		PlayerController->OnPossessedPawnChanged.RemoveDynamic(
-			this,
-			&UScaredyImpUISubsystem::OnPossessedPawnChanged
-		);
+		BoundPlayerController.Reset();
+		return;
 	}
+
+	UnbindFromCharacter(Cast<AScaredyImpCharacter>(PlayerController->GetPawn()));
+
+	PlayerController->OnPossessedPawnChanged.RemoveDynamic(this, &UScaredyImpUISubsystem::OnPossessedPawnChanged);
 
 	BoundPlayerController.Reset();
 }
 
+void UScaredyImpUISubsystem::BindToCharacter(AScaredyImpCharacter* Character)
+{
+	if (!IsValid(Character)) return;
+
+	if (UHealthComponent* HealthComponent = Character->GetHealthComponent())
+	{
+		HealthComponent->OnDeath.AddUniqueDynamic(this, &UScaredyImpUISubsystem::OnPlayerDeath);
+	}
+
+	if (IsValid(GameplayHUDWidget))
+	{
+		GameplayHUDWidget->BindToCharacter(Character);
+	}
+}
+
+void UScaredyImpUISubsystem::UnbindFromCharacter(AScaredyImpCharacter* Character)
+{
+	if (!IsValid(Character)) return;
+
+	if (UHealthComponent* HealthComponent = Character->GetHealthComponent())
+	{
+		HealthComponent->OnDeath.RemoveDynamic(this, &UScaredyImpUISubsystem::OnPlayerDeath);
+	}
+
+	if (IsValid(GameplayHUDWidget))
+	{
+		GameplayHUDWidget->UnbindFromCharacter();
+	}
+}
+
 void UScaredyImpUISubsystem::OnPossessedPawnChanged(APawn* OldPawn, APawn* NewPawn)
 {
-	if (!IsValid(GameplayHUDWidget)) return;
-
-	GameplayHUDWidget->UnbindFromCharacter();
-
-	AScaredyImpCharacter* PlayerCharacter = Cast<AScaredyImpCharacter>(NewPawn);
-	if (!IsValid(PlayerCharacter)) return;
-
-	GameplayHUDWidget->BindToCharacter(PlayerCharacter);
+	UnbindFromCharacter(Cast<AScaredyImpCharacter>(OldPawn));
+	BindToCharacter(Cast<AScaredyImpCharacter>(NewPawn));
 }

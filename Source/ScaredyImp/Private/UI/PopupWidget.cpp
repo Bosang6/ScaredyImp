@@ -3,7 +3,7 @@
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
 
-void UPopupWidget::SetupPopup(const FText& InTitle, const FText& InContent, const FText& InConfirmeText, const FText& InCancelText)
+void UPopupWidget::SetupPopup(const FText& InTitle, const FText& InContent, const FText& InConfirmText, const FText& InCancelText)
 {
 	if (IsValid(TitleText))
 	{
@@ -17,7 +17,7 @@ void UPopupWidget::SetupPopup(const FText& InTitle, const FText& InContent, cons
 
 	if (IsValid(ConfirmText))
 	{
-		ConfirmText->SetText(InConfirmeText);
+		ConfirmText->SetText(InConfirmText);
 	}
 
 	if (IsValid(CancelText))
@@ -56,12 +56,10 @@ void UPopupWidget::NativeDestruct()
 	Super::NativeDestruct();
 }
 
-void UPopupWidget::OnConfirmClicked()
+void UPopupWidget::OnConfirmClicked_Implementation()
 {
-	OnPopupResult.Broadcast(true);
 }
 
-void UPopupWidget::OnCancelClicked()
+void UPopupWidget::OnCancelClicked_Implementation()
 {
-	OnPopupResult.Broadcast(false);
 }

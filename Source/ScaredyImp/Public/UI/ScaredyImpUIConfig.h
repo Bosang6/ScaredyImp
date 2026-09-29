@@ -7,6 +7,8 @@
 
 class UUserWidget;
 class UHUDWidget;
+class UPopupWidget;
+enum class EPopupType : uint8;
 
 UCLASS()
 class SCAREDYIMP_API UScaredyImpUIConfig : public UDataAsset
@@ -24,5 +26,5 @@ public:
 	TSubclassOf<UUserWidget> PauseMenuWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI|Popup")
-	TSubclassOf<UUserWidget> PopupWidgetClass;
+	TMap<EPopupType, TSubclassOf<UPopupWidget>> PopupWidgetClasses;
 };

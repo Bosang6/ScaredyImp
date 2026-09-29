@@ -9,6 +9,9 @@ class UScaredyImpUIConfig;
 class UHUDWidget;
 class AEnemyBase;
 class APawn;
+class UPopupWidget;
+class AScaredyImpCharacter;
+enum class EPopupType : uint8;
 
 UENUM()
 enum class EScaredyImpUIContext : uint8
@@ -41,9 +44,27 @@ public:
 	void ShowBossStatus(AEnemyBase* Boss);
 	void HideBossStatus();
 
+	UFUNCTION(BlueprintCallable, Category = "UI|Popup")
+	UPopupWidget* ShowPopup(EPopupType PopupType);
+	UFUNCTION(BlueprintCallable, Category = "UI|Popup")
+	void ClosePopup();
+
+	UFUNCTION()
+	void OnPlayerDeath();
+
 private:
+	void EnterUIContext(EScaredyImpUIContext Context);
+	void ExitUIContext(EScaredyImpUIContext Context);
+
+	void ClearRuntimeUI();
+	void RebuildCurrentUI();
+
+	void UpdatePlayerControllerBinding(APlayerController* NewPlayerController);
 	void BindToPlayerController(APlayerController* PlayerController);
 	void UnbindFromPlayerController();
+
+	void BindToCharacter(AScaredyImpCharacter* Character);
+	void UnbindFromCharacter(AScaredyImpCharacter* Character);
 
 	UFUNCTION()
 	void OnPossessedPawnChanged(APawn* OldPawn, APawn* NewPawn);
@@ -56,6 +77,9 @@ private:
 
 	UPROPERTY(Transient)
 	TObjectPtr<UHUDWidget> GameplayHUDWidget;
+
+	UPROPERTY(Transient)
+	TObjectPtr<UPopupWidget> ActivePopupWidget;
 
 	TWeakObjectPtr<APlayerController> BoundPlayerController;
 };
