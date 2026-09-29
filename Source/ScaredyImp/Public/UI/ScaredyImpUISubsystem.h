@@ -66,6 +66,9 @@ private:
 	void BindToCharacter(AScaredyImpCharacter* Character);
 	void UnbindFromCharacter(AScaredyImpCharacter* Character);
 
+	void SetUIInputMode();
+	void RestoreGameInputMode();
+
 	UFUNCTION()
 	void OnPossessedPawnChanged(APawn* OldPawn, APawn* NewPawn);
 

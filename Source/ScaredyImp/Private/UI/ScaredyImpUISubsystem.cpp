@@ -143,6 +143,9 @@ UPopupWidget* UScaredyImpUISubsystem::ShowPopup(EPopupType PopupType)
 
 	ActivePopupWidget->AddToPlayerScreen(10);
 
+	// Show Cursor 
+	SetUIInputMode();
+
 	return ActivePopupWidget;
 }
 
@@ -153,6 +156,9 @@ void UScaredyImpUISubsystem::ClosePopup()
 		ActivePopupWidget->RemoveFromParent();
 	}
 	ActivePopupWidget = nullptr;
+
+	// Hide Cursor
+	RestoreGameInputMode();
 }
 
 void UScaredyImpUISubsystem::OnPlayerDeath()
@@ -279,6 +285,29 @@ void UScaredyImpUISubsystem::UnbindFromCharacter(AScaredyImpCharacter* Character
 	{
 		GameplayHUDWidget->UnbindFromCharacter();
 	}
+}
+
+void UScaredyImpUISubsystem::SetUIInputMode()
+{
+	APlayerController* PlayerController = GetOwningPlayerController();
+	if (!IsValid(PlayerController)) return;
+	if (!IsValid(ActivePopupWidget)) return;
+
+	FInputModeUIOnly InputMode;
+	InputMode.SetWidgetToFocus(ActivePopupWidget->TakeWidget());
+	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+
+	PlayerController->SetInputMode(InputMode);
+	PlayerController->bShowMouseCursor = true;
+}
+
+void UScaredyImpUISubsystem::RestoreGameInputMode()
+{
+	APlayerController* PlayerController = GetOwningPlayerController();
+	if (!IsValid(PlayerController)) return;
+
+	PlayerController->SetInputMode(FInputModeGameOnly());
+	PlayerController->bShowMouseCursor = false;
 }
 
 void UScaredyImpUISubsystem::OnPossessedPawnChanged(APawn* OldPawn, APawn* NewPawn)
