@@ -2,6 +2,8 @@
 #include "UI/PopupWidget.h"
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
+#include "UI/ScaredyImpUISubsystem.h"
+#include "Engine/LocalPlayer.h"
 
 void UPopupWidget::SetupPopup(const FText& InTitle, const FText& InContent, const FText& InConfirmText, const FText& InCancelText)
 {
@@ -62,4 +64,16 @@ void UPopupWidget::OnConfirmClicked_Implementation()
 
 void UPopupWidget::OnCancelClicked_Implementation()
 {
+}
+
+void UPopupWidget::RequestClosePopup()
+{
+	APlayerController* PlayerController = GetOwningPlayer();
+
+	if (!IsValid(PlayerController)) return;
+
+	if (UScaredyImpUISubsystem* UISubsystem = ULocalPlayer::GetSubsystemFromController<UScaredyImpUISubsystem>(PlayerController))
+	{
+		UISubsystem->ClosePopup();
+	}
 }

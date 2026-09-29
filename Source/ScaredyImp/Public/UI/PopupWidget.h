@@ -43,6 +43,9 @@ protected:
 	void OnCancelClicked();
 	virtual void OnCancelClicked_Implementation();
 
+	UFUNCTION(BlueprintCallable, Category = "Popup")
+	void RequestClosePopup();
+
 protected:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UTextBlock> TitleText;
