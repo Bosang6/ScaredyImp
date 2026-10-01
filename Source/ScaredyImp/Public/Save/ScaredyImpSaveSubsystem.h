@@ -4,6 +4,7 @@
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "ScaredyImpSaveSubsystem.generated.h"
+#include "Save/ScaredyImpSaveGame.h"
 
 class UScaredyImpSaveGame;
 
@@ -21,6 +22,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Save")
 	bool DeleteSaveGame();
+
+	UFUNCTION(BlueprintCallable, Category = "Save")
+	bool SaveGame(const FScaredyImpPlayerSaveData& PlayerData);
 	
 private:
 	TObjectPtr<UScaredyImpSaveGame> CurrentSaveGame;

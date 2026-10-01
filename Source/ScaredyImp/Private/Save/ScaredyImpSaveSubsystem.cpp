@@ -49,3 +49,28 @@ bool UScaredyImpSaveSubsystem::DeleteSaveGame()
 
 	return true;
 }
+
+bool UScaredyImpSaveSubsystem::SaveGame(const FScaredyImpPlayerSaveData& PlayerData)
+{
+	UScaredyImpSaveGame* SaveGameObject = Cast<UScaredyImpSaveGame>(
+		UGameplayStatics::CreateSaveGameObject(
+			UScaredyImpSaveGame::StaticClass()
+		)
+	);
+
+	if (!IsValid(SaveGameObject)) return false;
+
+	SaveGameObject->PlayerData = PlayerData;
+
+	const bool bSaved = UGameplayStatics::SaveGameToSlot(
+		SaveGameObject,
+		SaveSlotName,
+		UserIndex
+	);
+
+	if (!bSaved) return false;
+
+	CurrentSaveGame = SaveGameObject;
+
+	return true;
+}
