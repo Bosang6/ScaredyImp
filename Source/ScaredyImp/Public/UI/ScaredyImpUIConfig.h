@@ -9,6 +9,7 @@ class UUserWidget;
 class UHUDWidget;
 class UPopupWidget;
 class UMainMenuWidget;
+class UPauseMenuWidget;
 enum class EPopupType : uint8;
 
 UCLASS()
@@ -24,7 +25,7 @@ public:
 	TSubclassOf<UHUDWidget> GameplayHUDWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI|Pause")
-	TSubclassOf<UUserWidget> PauseMenuWidgetClass;
+	TSubclassOf<UPauseMenuWidget> PauseMenuWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI|Popup")
 	TMap<EPopupType, TSubclassOf<UPopupWidget>> PopupWidgetClasses;

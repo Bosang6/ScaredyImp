@@ -1,6 +1,8 @@
 
 #include "UI/PauseMenuWidget.h"
 #include "Components/Button.h"
+#include "Engine/LocalPlayer.h"
+#include "UI/ScaredyImpUISubsystem.h"
 
 void UPauseMenuWidget::NativeConstruct()
 {
@@ -40,6 +42,13 @@ void UPauseMenuWidget::NativeDestruct()
 
 void UPauseMenuWidget::OnResumeButtonClicked_Implementation()
 {
+	APlayerController* PlayerController = GetOwningPlayer();
+	if (!IsValid(PlayerController)) return;
+
+	UScaredyImpUISubsystem* UISubsystem = ULocalPlayer::GetSubsystemFromController<UScaredyImpUISubsystem>(PlayerController);
+	if (!IsValid(UISubsystem)) return;
+
+	UISubsystem->HidePauseMenu();
 }
 
 void UPauseMenuWidget::OnSettingsButtonClicked_Implementation()

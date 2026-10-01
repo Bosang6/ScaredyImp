@@ -6,9 +6,11 @@
 #include "UI/HUDWidget.h"
 #include "UI/MainMenuWidget.h"
 #include "UI/PopupWidget.h"
+#include "UI/PauseMenuWidget.h"
 #include "ScaredyImpCharacter.h"
 #include "Enemies/EnemyBase.h"
 #include "Comps/HealthComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 void UScaredyImpUISubsystem::Initialize(FSubsystemCollectionBase& CollectionBase)
 {
@@ -114,6 +116,45 @@ void UScaredyImpUISubsystem::HideMainMenu()
 	}
 
 	MainMenuWidget = nullptr;
+
+	// Hide Cursor
+	RestoreGameInputMode();
+}
+
+void UScaredyImpUISubsystem::ShowPauseMenu()
+{
+	if (IsValid(PauseMenuWidget)) return;
+	if (!IsValid(UIConfig)) return;
+	if (!UIConfig->PauseMenuWidgetClass) return;
+
+	APlayerController* PlayerController = GetOwningPlayerController();
+	if (!IsValid(PlayerController)) return;
+
+	PauseMenuWidget = CreateWidget<UPauseMenuWidget>(
+		PlayerController,
+		UIConfig->PauseMenuWidgetClass
+	);
+
+	PauseMenuWidget->AddToPlayerScreen(20);
+
+	// Pause the game
+	UGameplayStatics::SetGamePaused(this, true);
+
+	// Show Cursor 
+	SetUIInputMode(PauseMenuWidget);
+}
+
+void UScaredyImpUISubsystem::HidePauseMenu()
+{
+	if (IsValid(PauseMenuWidget))
+	{
+		PauseMenuWidget->RemoveFromParent();
+	}
+
+	PauseMenuWidget = nullptr;
+
+	// Resume the game
+	UGameplayStatics::SetGamePaused(this, false);
 
 	// Hide Cursor
 	RestoreGameInputMode();
@@ -247,6 +288,7 @@ void UScaredyImpUISubsystem::ClearRuntimeUI()
 	ClosePopup();
 	HideGameplayHUD();
 	HideMainMenu();
+	HidePauseMenu();
 }
 
 void UScaredyImpUISubsystem::RebuildCurrentUI()

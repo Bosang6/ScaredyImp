@@ -8,6 +8,7 @@
 class UScaredyImpUIConfig;
 class UHUDWidget;
 class UMainMenuWidget;
+class UPauseMenuWidget;
 class AEnemyBase;
 class APawn;
 class UPopupWidget;
@@ -41,6 +42,9 @@ public:
 
 	void ShowMainMenu();
 	void HideMainMenu();
+
+	void ShowPauseMenu();
+	void HidePauseMenu();
 
 	void ShowGameplayHUD();
 	void HideGameplayHUD();
@@ -84,6 +88,9 @@ private:
 
 	UPROPERTY(Transient)
 	TObjectPtr<UMainMenuWidget> MainMenuWidget;
+
+	UPROPERTY(Transient)
+	TObjectPtr<UPauseMenuWidget> PauseMenuWidget;
 
 	UPROPERTY(Transient)
 	TObjectPtr<UHUDWidget> GameplayHUDWidget;
