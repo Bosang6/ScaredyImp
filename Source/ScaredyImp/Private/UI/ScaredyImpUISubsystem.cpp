@@ -4,6 +4,7 @@
 #include "UI/ScaredyImpUIConfig.h"
 #include "UI/ScaredyImpUISettings.h"
 #include "UI/HUDWidget.h"
+#include "UI/MainMenuWidget.h"
 #include "UI/PopupWidget.h"
 #include "ScaredyImpCharacter.h"
 #include "Enemies/EnemyBase.h"
@@ -79,6 +80,45 @@ void UScaredyImpUISubsystem::SetUIContext(EScaredyImpUIContext NewContext)
 	EnterUIContext(NewContext);
 }
 
+void UScaredyImpUISubsystem::ShowMainMenu()
+{
+	if (IsValid(MainMenuWidget)) return;
+	if (!IsValid(UIConfig)) return;
+	if (!IsValid(UIConfig->MainMenuWidgetClass)) return;
+
+	APlayerController* PlayerController = GetOwningPlayerController();
+	if (!IsValid(PlayerController)) return;
+
+	MainMenuWidget = CreateWidget<UMainMenuWidget>(
+		PlayerController,
+		UIConfig->MainMenuWidgetClass
+	);
+
+	if (!IsValid(MainMenuWidget)) return;
+
+	// TODO
+	// Save System is not implemented yet
+	MainMenuWidget->SetContienueBtnEnabled(false);
+
+	MainMenuWidget->AddToPlayerScreen(0);
+
+	// Show Cursor 
+	SetUIInputMode(MainMenuWidget);
+}
+
+void UScaredyImpUISubsystem::HideMainMenu()
+{
+	if (IsValid(MainMenuWidget))
+	{
+		MainMenuWidget->RemoveFromParent();
+	}
+
+	MainMenuWidget = nullptr;
+
+	// Hide Cursor
+	RestoreGameInputMode();
+}
+
 void UScaredyImpUISubsystem::ShowGameplayHUD()
 {
 	if (IsValid(GameplayHUDWidget)) return;
@@ -144,7 +184,7 @@ UPopupWidget* UScaredyImpUISubsystem::ShowPopup(EPopupType PopupType)
 	ActivePopupWidget->AddToPlayerScreen(10);
 
 	// Show Cursor 
-	SetUIInputMode();
+	SetUIInputMode(ActivePopupWidget);
 
 	return ActivePopupWidget;
 }
@@ -157,6 +197,7 @@ void UScaredyImpUISubsystem::ClosePopup()
 	}
 	ActivePopupWidget = nullptr;
 
+	if (CurrentUIContext == EScaredyImpUIContext::MainMenu) return;
 	// Hide Cursor
 	RestoreGameInputMode();
 }
@@ -169,11 +210,10 @@ void UScaredyImpUISubsystem::OnPlayerDeath()
 void UScaredyImpUISubsystem::EnterUIContext(EScaredyImpUIContext Context)
 {
 	// Enter new context
-	switch (CurrentUIContext)
+	switch (Context)
 	{
 		case EScaredyImpUIContext::MainMenu:
-			// TODO
-			// ...
+			ShowMainMenu();
 			break;
 
 		case EScaredyImpUIContext::Gameplay:
@@ -187,11 +227,10 @@ void UScaredyImpUISubsystem::EnterUIContext(EScaredyImpUIContext Context)
 
 void UScaredyImpUISubsystem::ExitUIContext(EScaredyImpUIContext Context)
 {
-	switch (CurrentUIContext)
+	switch (Context)
 	{
 		case EScaredyImpUIContext::MainMenu:
-			// TODO
-			// ...
+			HideMainMenu();
 			break;
 
 		case EScaredyImpUIContext::Gameplay:
@@ -207,6 +246,7 @@ void UScaredyImpUISubsystem::ClearRuntimeUI()
 {
 	ClosePopup();
 	HideGameplayHUD();
+	HideMainMenu();
 }
 
 void UScaredyImpUISubsystem::RebuildCurrentUI()
@@ -287,14 +327,17 @@ void UScaredyImpUISubsystem::UnbindFromCharacter(AScaredyImpCharacter* Character
 	}
 }
 
-void UScaredyImpUISubsystem::SetUIInputMode()
+void UScaredyImpUISubsystem::SetUIInputMode(UUserWidget* WidgetToFocus)
 {
 	APlayerController* PlayerController = GetOwningPlayerController();
 	if (!IsValid(PlayerController)) return;
-	if (!IsValid(ActivePopupWidget)) return;
 
 	FInputModeUIOnly InputMode;
-	InputMode.SetWidgetToFocus(ActivePopupWidget->TakeWidget());
+
+	if (IsValid(WidgetToFocus))
+	{
+		InputMode.SetWidgetToFocus(WidgetToFocus->TakeWidget());
+	}
 	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
 
 	PlayerController->SetInputMode(InputMode);

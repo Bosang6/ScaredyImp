@@ -1,6 +1,9 @@
 
 #include "UI/MainMenuWidget.h"
 #include "Components/Button.h"
+#include "Engine/LocalPlayer.h"
+#include "UI/ScaredyImpUISubsystem.h"
+#include "UI/PopupWidget.h"
 
 void UMainMenuWidget::SetContienueBtnEnabled(bool bEnabled)
 {
@@ -73,4 +76,12 @@ void UMainMenuWidget::OnSettingsButtonClicked_Implementation()
 
 void UMainMenuWidget::OnQuitButtonClicked_Implementation()
 {
+	APlayerController* PlayerController = GetOwningPlayer();
+	if (!IsValid(PlayerController)) return;
+
+	UScaredyImpUISubsystem* UISubsystem = ULocalPlayer::GetSubsystemFromController<UScaredyImpUISubsystem>(PlayerController);
+
+	if (!IsValid(UISubsystem)) return;
+
+	UISubsystem->ShowPopup(EPopupType::ConfirmQuit);
 }

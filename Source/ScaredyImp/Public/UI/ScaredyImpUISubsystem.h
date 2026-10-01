@@ -7,6 +7,7 @@
 
 class UScaredyImpUIConfig;
 class UHUDWidget;
+class UMainMenuWidget;
 class AEnemyBase;
 class APawn;
 class UPopupWidget;
@@ -38,6 +39,9 @@ public:
 
 	EScaredyImpUIContext GetUIContext() const { return CurrentUIContext; }
 
+	void ShowMainMenu();
+	void HideMainMenu();
+
 	void ShowGameplayHUD();
 	void HideGameplayHUD();
 
@@ -66,7 +70,7 @@ private:
 	void BindToCharacter(AScaredyImpCharacter* Character);
 	void UnbindFromCharacter(AScaredyImpCharacter* Character);
 
-	void SetUIInputMode();
+	void SetUIInputMode(UUserWidget* WidgetToFocus = nullptr);
 	void RestoreGameInputMode();
 
 	UFUNCTION()
@@ -77,6 +81,9 @@ private:
 
 	UPROPERTY(Transient)
 	TObjectPtr<UScaredyImpUIConfig> UIConfig;
+
+	UPROPERTY(Transient)
+	TObjectPtr<UMainMenuWidget> MainMenuWidget;
 
 	UPROPERTY(Transient)
 	TObjectPtr<UHUDWidget> GameplayHUDWidget;

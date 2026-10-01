@@ -8,6 +8,7 @@
 class UUserWidget;
 class UHUDWidget;
 class UPopupWidget;
+class UMainMenuWidget;
 enum class EPopupType : uint8;
 
 UCLASS()
@@ -17,7 +18,7 @@ class SCAREDYIMP_API UScaredyImpUIConfig : public UDataAsset
 	
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI|MainMenu")
-	TSubclassOf<UUserWidget> MainMenuWidgetClass;
+	TSubclassOf<UMainMenuWidget> MainMenuWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI|HUD")
 	TSubclassOf<UHUDWidget> GameplayHUDWidgetClass;
