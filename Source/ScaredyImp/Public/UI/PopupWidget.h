@@ -14,7 +14,8 @@ enum class EPopupType : uint8
 	GameOver,
 	Victory,
 	ConfirmNewGame,
-	ConfirmQuit
+	ConfirmQuit,
+	ConfirmReturnMainMenu
 };
 
 UCLASS()

@@ -3,6 +3,7 @@
 #include "Components/Button.h"
 #include "Engine/LocalPlayer.h"
 #include "UI/ScaredyImpUISubsystem.h"
+#include "UI/PopupWidget.h"
 
 void UPauseMenuWidget::NativeConstruct()
 {
@@ -18,7 +19,7 @@ void UPauseMenuWidget::NativeConstruct()
 
 	if (IsValid(MainMenuButton))
 	{
-		MainMenuButton->OnClicked.AddUniqueDynamic(this, &UPauseMenuWidget::OnSettingsButtonClicked);
+		MainMenuButton->OnClicked.AddUniqueDynamic(this, &UPauseMenuWidget::OnMainMenuButtonClicked);
 	}
 }
 
@@ -57,4 +58,11 @@ void UPauseMenuWidget::OnSettingsButtonClicked_Implementation()
 
 void UPauseMenuWidget::OnMainMenuButtonClicked_Implementation()
 {
+	APlayerController* PlayerController = GetOwningPlayer();
+	if (!IsValid(PlayerController)) return;
+
+	UScaredyImpUISubsystem* UISubsystem = ULocalPlayer::GetSubsystemFromController<UScaredyImpUISubsystem>(PlayerController);
+	if (!IsValid(UISubsystem)) return;
+
+	UISubsystem->ShowPopup(EPopupType::ConfirmReturnMainMenu);
 }

@@ -222,7 +222,7 @@ UPopupWidget* UScaredyImpUISubsystem::ShowPopup(EPopupType PopupType)
 
 	if (!IsValid(ActivePopupWidget)) return nullptr;
 
-	ActivePopupWidget->AddToPlayerScreen(10);
+	ActivePopupWidget->AddToPlayerScreen(30);
 
 	// Show Cursor 
 	SetUIInputMode(ActivePopupWidget);
@@ -239,6 +239,8 @@ void UScaredyImpUISubsystem::ClosePopup()
 	ActivePopupWidget = nullptr;
 
 	if (CurrentUIContext == EScaredyImpUIContext::MainMenu) return;
+	if (IsValid(PauseMenuWidget)) return;
+
 	// Hide Cursor
 	RestoreGameInputMode();
 }
