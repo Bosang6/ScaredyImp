@@ -6,6 +6,7 @@
 #include "ScaredyImp.h"
 #include "ScaredyImpCharacter.h"
 #include "UI/ScaredyImpUISubsystem.h"
+#include "EnhancedInputComponent.h"
 
 void AScaredyImpPlayerController::BeginPlay()
 {
@@ -41,4 +42,28 @@ void AScaredyImpPlayerController::SetupInputComponent()
 			}
 		}
 	}
+
+	// Bind PlayerController input action
+	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent);
+
+	if (!IsValid(EnhancedInputComponent)) return;
+
+	if (IsValid(PauseAction))
+	{
+		EnhancedInputComponent->BindAction(
+			PauseAction,
+			ETriggerEvent::Started,
+			this,
+			&AScaredyImpPlayerController::OnPausePressed
+		);
+	}
+}
+
+void AScaredyImpPlayerController::OnPausePressed()
+{
+	UScaredyImpUISubsystem* UISubsystem = ULocalPlayer::GetSubsystemFromController<UScaredyImpUISubsystem>(this);
+
+	if (!IsValid(UISubsystem)) return;
+
+	UISubsystem->ShowPauseMenu();
 }

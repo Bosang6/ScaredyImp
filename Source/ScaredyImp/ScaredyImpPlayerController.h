@@ -6,6 +6,7 @@
 #include "ScaredyImpPlayerController.generated.h"
 
 class UInputMappingContext;
+class UInputAction;
 
 UCLASS(abstract)
 class AScaredyImpPlayerController : public APlayerController
@@ -15,8 +16,13 @@ class AScaredyImpPlayerController : public APlayerController
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
+
+	void OnPausePressed();
 	
 protected:
 	UPROPERTY(EditAnywhere, Category ="Input|Input Mappings")
 	TArray<UInputMappingContext*> DefaultMappingContexts;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> PauseAction;
 };
