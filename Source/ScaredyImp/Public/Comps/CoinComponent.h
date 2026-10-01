@@ -21,6 +21,9 @@ public:
 	void AddCoin(int32 Amount = 1);
 
 	UFUNCTION(BlueprintCallable, Category = "Coin")
+	void RestoreCoinCount(int32 InCoinCount);
+
+	UFUNCTION(BlueprintCallable, Category = "Coin")
 	int32 GetCoinCount() const { return CoinCount; };
 
 protected:

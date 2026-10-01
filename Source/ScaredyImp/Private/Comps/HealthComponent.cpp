@@ -60,6 +60,16 @@ void UHealthComponent::Heal(int32 HealAmount)
 	OnHealthChanged.Broadcast(CurrentHealth, MaxHealth);
 }
 
+// For Save Game
+void UHealthComponent::RestoreHealth(int32 Health)
+{
+	if (!bIsInitialized) return;
+
+	CurrentHealth = FMath::Clamp(Health, 0, MaxHealth);
+
+	OnHealthChanged.Broadcast(CurrentHealth, MaxHealth);
+}
+
 bool UHealthComponent::IsFullHealth() const
 {
 	return bIsInitialized && CurrentHealth >= MaxHealth;

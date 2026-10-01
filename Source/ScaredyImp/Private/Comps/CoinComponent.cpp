@@ -29,6 +29,13 @@ void UCoinComponent::AddCoin(int32 Amount)
 	}
 }
 
+void UCoinComponent::RestoreCoinCount(int32 InCoinCount)
+{
+	CoinCount = FMath::Max(0, InCoinCount);
+
+	OnCoinChanged.Broadcast(CoinCount);
+}
+
 void UCoinComponent::BeginPlay()
 {
 	Super::BeginPlay();

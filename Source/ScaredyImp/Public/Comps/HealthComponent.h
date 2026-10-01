@@ -14,16 +14,6 @@ class SCAREDYIMP_API UHealthComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
-	bool bIsInitialized = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
-	int32 MaxHealth = 5;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Health")
-	int32 CurrentHealth = 0;
-
 public:	
 	UHealthComponent();
 
@@ -35,6 +25,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	void Heal(int32 HealAmount);
+
+	UFUNCTION(BlueprintCallable, Category = "Health")
+	void RestoreHealth(int32 Health);
 
 	UFUNCTION(BlueprintPure, Category = "Health")
 	bool IsFullHealth() const;
@@ -61,4 +54,14 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual void InitComponent();
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
+	bool bIsInitialized = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	int32 MaxHealth = 5;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Health")
+	int32 CurrentHealth = 0;
 };
