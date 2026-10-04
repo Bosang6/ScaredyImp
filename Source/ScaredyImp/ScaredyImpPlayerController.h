@@ -7,6 +7,7 @@
 
 class UInputMappingContext;
 class UInputAction;
+class AScaredyImpCharacter;
 
 UCLASS(abstract)
 class AScaredyImpPlayerController : public APlayerController
@@ -16,8 +17,12 @@ class AScaredyImpPlayerController : public APlayerController
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
+	virtual void OnPossess(APawn* InPawn) override;
+	virtual void OnUnPossess() override;
 
 	void OnPausePressed();
+
+	void OnCharacterReady(AScaredyImpCharacter* Character);
 	
 protected:
 	UPROPERTY(EditAnywhere, Category ="Input|Input Mappings")

@@ -29,9 +29,14 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Save")
 	bool SaveAtCheckpoint(AScaredyImpCharacter* Character);
+
+	UFUNCTION(BlueprintCallable, Category = "Save")
+	bool ApplySaveGame(AScaredyImpCharacter* Character);
 	
 private:
 	TObjectPtr<UScaredyImpSaveGame> CurrentSaveGame;
+
+	bool bPendingApply = false;
 
 	static const FString SaveSlotName;
 	static constexpr int32 UserIndex = 0;

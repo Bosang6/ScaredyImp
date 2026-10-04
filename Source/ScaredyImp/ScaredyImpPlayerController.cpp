@@ -7,6 +7,7 @@
 #include "ScaredyImpCharacter.h"
 #include "UI/ScaredyImpUISubsystem.h"
 #include "EnhancedInputComponent.h"
+#include "Save/ScaredyImpSaveSubsystem.h"
 
 void AScaredyImpPlayerController::BeginPlay()
 {
@@ -59,6 +60,36 @@ void AScaredyImpPlayerController::SetupInputComponent()
 	}
 }
 
+void AScaredyImpPlayerController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+
+	AScaredyImpCharacter* PlayerCharacter = Cast<AScaredyImpCharacter>(InPawn);
+	if (!IsValid(PlayerCharacter)) return;
+
+	// Avoid duplicate bindings.
+	PlayerCharacter->OnCharacterReady.RemoveAll(this);
+
+	// If the Character is already Ready, we don't need to wait for the Delegate.
+	if (PlayerCharacter->IsCharacterReady())
+	{
+		OnCharacterReady(PlayerCharacter);
+		return;
+	}
+
+	PlayerCharacter->OnCharacterReady.AddUObject(this, &AScaredyImpPlayerController::OnCharacterReady);
+}
+
+void AScaredyImpPlayerController::OnUnPossess()
+{
+	if (AScaredyImpCharacter* PlayerCharacter = Cast<AScaredyImpCharacter>(GetPawn()))
+	{
+		PlayerCharacter->OnCharacterReady.RemoveAll(this);
+	}
+
+	Super::OnUnPossess();
+}
+
 void AScaredyImpPlayerController::OnPausePressed()
 {
 	UScaredyImpUISubsystem* UISubsystem = ULocalPlayer::GetSubsystemFromController<UScaredyImpUISubsystem>(this);
@@ -66,4 +97,19 @@ void AScaredyImpPlayerController::OnPausePressed()
 	if (!IsValid(UISubsystem)) return;
 
 	UISubsystem->ShowPauseMenu();
+}
+
+void AScaredyImpPlayerController::OnCharacterReady(AScaredyImpCharacter* InCharacter)
+{
+	if (!IsValid(InCharacter)) return;
+
+	InCharacter->OnCharacterReady.RemoveAll(this);
+
+	UGameInstance* GameInstance = GetGameInstance();
+	if (!IsValid(GameInstance)) return;
+
+	UScaredyImpSaveSubsystem* SaveSubsystem = GameInstance->GetSubsystem<UScaredyImpSaveSubsystem>();
+	if (!IsValid(SaveSubsystem)) return;
+
+	SaveSubsystem->ApplySaveGame(InCharacter);
 }

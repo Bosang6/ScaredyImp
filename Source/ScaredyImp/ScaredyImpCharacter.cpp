@@ -75,6 +75,9 @@ void AScaredyImpCharacter::BeginPlay()
 			&AScaredyImpCharacter::OnDamaged
 		);
 	}
+
+	bCharacterReady = true;
+	OnCharacterReady.Broadcast(this);
 }
 
 void AScaredyImpCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

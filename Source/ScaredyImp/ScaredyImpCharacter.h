@@ -17,6 +17,8 @@ struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnScaredyImpCharacterReady, AScaredyImpCharacter*);
+
 /**
  *  A simple player-controllable third person character
  *  Implements a controllable orbiting camera
@@ -73,10 +75,17 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
 	bool bIsHit = false;
 
+private:
+	bool bCharacterReady = false;
+
 public:
 
 	/** Constructor */
 	AScaredyImpCharacter();	
+
+	FOnScaredyImpCharacterReady OnCharacterReady;
+
+	bool IsCharacterReady() const { return bCharacterReady; };
 
 	FORCEINLINE UHealthComponent* GetHealthComponent() const { return HealthComponent;}
 	FORCEINLINE UCoinComponent* GetCoinComponent() const { return CoinComponent; }
