@@ -2,6 +2,10 @@
 #include "Save/ScaredyImpSaveSubsystem.h"
 #include "Save/ScaredyImpSaveGame.h"
 #include "Kismet/GameplayStatics.h"
+#include "ScaredyImpCharacter.h"
+#include "Comps/HealthComponent.h"
+#include "Comps/CoinComponent.h"
+#include "Checkpoint/CheckpointSubsystem.h"
 
 // game only supports one save
 const FString UScaredyImpSaveSubsystem::SaveSlotName = TEXT("ScaredyImpSave");
@@ -73,4 +77,28 @@ bool UScaredyImpSaveSubsystem::SaveGame(const FScaredyImpPlayerSaveData& PlayerD
 	CurrentSaveGame = SaveGameObject;
 
 	return true;
+}
+
+bool UScaredyImpSaveSubsystem::SaveAtCheckpoint(AScaredyImpCharacter* Character)
+{
+	if (!IsValid(Character)) return false;
+
+	UHealthComponent* HealthCompoennt = Character->GetHealthComponent();
+	UCoinComponent* CoinComponent = Character->GetCoinComponent();
+	if (!IsValid(HealthCompoennt) || !IsValid(CoinComponent)) return false;
+
+	UWorld* World = Character->GetWorld();
+	if (!IsValid(World)) return false;
+
+	UCheckpointSubsystem* CheckpointSubsystem = World->GetSubsystem<UCheckpointSubsystem>();
+	if (!IsValid(CheckpointSubsystem)) return false;
+
+	if (!CheckpointSubsystem->HasActiveCheckpoint()) return false;
+
+	FScaredyImpPlayerSaveData PlayerData;
+	PlayerData.Health = HealthCompoennt->GetCurrentHealth();
+	PlayerData.Coins = CoinComponent->GetCoinCount();
+	PlayerData.CheckpointTransform = CheckpointSubsystem->GetCurrentCheckpoint();
+
+	return SaveGame(PlayerData);
 }

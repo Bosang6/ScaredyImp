@@ -7,6 +7,7 @@
 #include "ScaredyImpSaveSubsystem.generated.h"
 
 class UScaredyImpSaveGame;
+class AScaredyImpCharacter;
 
 UCLASS()
 class SCAREDYIMP_API UScaredyImpSaveSubsystem : public UGameInstanceSubsystem
@@ -25,6 +26,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Save")
 	bool SaveGame(const FScaredyImpPlayerSaveData& PlayerData);
+
+	UFUNCTION(BlueprintCallable, Category = "Save")
+	bool SaveAtCheckpoint(AScaredyImpCharacter* Character);
 	
 private:
 	TObjectPtr<UScaredyImpSaveGame> CurrentSaveGame;

@@ -5,6 +5,8 @@
 #include "Checkpoint/CheckpointSubsystem.h"
 #include "GameFramework/Pawn.h"
 #include "ScaredyImp.h"
+#include "Save/ScaredyImpSaveSubsystem.h"
+#include "ScaredyImpCharacter.h"
 
 ACheckpoint::ACheckpoint()
 {
@@ -35,9 +37,9 @@ void ACheckpoint::BeginPlay()
 
 void ACheckpoint::OnTriggerBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	APawn* Pawn = Cast<APawn>(OtherActor);
+	AScaredyImpCharacter* Character = Cast<AScaredyImpCharacter>(OtherActor);
 
-	if (!IsValid(Pawn) || !Pawn->IsPlayerControlled()) return;
+	if (!IsValid(Character) || !Character->IsPlayerControlled()) return;
 
 	UCheckpointSubsystem* CheckpointSubsystem = GetWorld()->GetSubsystem<UCheckpointSubsystem>();
 	if (!IsValid(CheckpointSubsystem))
@@ -48,6 +50,12 @@ void ACheckpoint::OnTriggerBoxBeginOverlap(UPrimitiveComponent* OverlappedCompon
 
 	// Record checkpoint
 	CheckpointSubsystem->ActivateCheckpoint(RespawnPoint->GetComponentTransform());
+
+	// Auto Save Game
+	if (UScaredyImpSaveSubsystem* SaveSubsystem = GetGameInstance()->GetSubsystem<UScaredyImpSaveSubsystem>())
+	{
+		SaveSubsystem->SaveAtCheckpoint(Character);
+	}
 
 	UE_LOG(LogScaredyImp, Warning, TEXT("[Checkpoint] Activate."));
 }
