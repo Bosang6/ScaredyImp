@@ -13,7 +13,8 @@ class SCAREDYIMP_API UMainMenuWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	void SetContienueBtnEnabled(bool bEnabled);
+	void SetContinueBtnEnabled(bool bEnabled);
+	void RefreshContinueButtonState();
 
 protected:
 	virtual void NativeConstruct() override;
@@ -47,4 +48,7 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> QuitButton;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Main Menu")
+	TSoftObjectPtr<UWorld> GameplayLevel;
 };

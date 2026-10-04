@@ -98,9 +98,7 @@ void UScaredyImpUISubsystem::ShowMainMenu()
 
 	if (!IsValid(MainMenuWidget)) return;
 
-	// TODO
-	// Save System is not implemented yet
-	MainMenuWidget->SetContienueBtnEnabled(false);
+	MainMenuWidget->RefreshContinueButtonState();
 
 	MainMenuWidget->AddToPlayerScreen(0);
 

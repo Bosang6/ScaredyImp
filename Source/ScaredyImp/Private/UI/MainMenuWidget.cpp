@@ -4,12 +4,33 @@
 #include "Engine/LocalPlayer.h"
 #include "UI/ScaredyImpUISubsystem.h"
 #include "UI/PopupWidget.h"
+#include "Save/ScaredyImpSaveSubsystem.h"
+#include "Kismet/GameplayStatics.h"
 
-void UMainMenuWidget::SetContienueBtnEnabled(bool bEnabled)
+void UMainMenuWidget::SetContinueBtnEnabled(bool bEnabled)
 {
 	if (!IsValid(ContinueButton)) return;
 
 	ContinueButton->SetIsEnabled(bEnabled);
+}
+
+void UMainMenuWidget::RefreshContinueButtonState()
+{
+	UGameInstance* GameInstance = GetGameInstance();
+	if (!IsValid(GameInstance))
+	{
+		SetContinueBtnEnabled(false);
+		return;
+	}
+
+	UScaredyImpSaveSubsystem* SaveSubsystem = GameInstance->GetSubsystem<UScaredyImpSaveSubsystem>();
+	if (!IsValid(SaveSubsystem))
+	{
+		SetContinueBtnEnabled(false);
+		return;
+	}
+
+	SetContinueBtnEnabled(SaveSubsystem->HasSaveGame());
 }
 
 void UMainMenuWidget::NativeConstruct()
@@ -35,6 +56,8 @@ void UMainMenuWidget::NativeConstruct()
 	{
 		QuitButton->OnClicked.AddUniqueDynamic(this, &UMainMenuWidget::OnQuitButtonClicked);
 	}
+
+	RefreshContinueButtonState();
 }
 
 void UMainMenuWidget::NativeDestruct()
@@ -68,6 +91,22 @@ void UMainMenuWidget::OnNewGameClicked_Implementation()
 
 void UMainMenuWidget::OnContinueButtonClicked_Implementation()
 {
+	UGameInstance* GameInstance = GetGameInstance();
+	if (!IsValid(GameInstance)) return;
+
+	UScaredyImpSaveSubsystem* SaveSubsystem = GameInstance->GetSubsystem<UScaredyImpSaveSubsystem>();
+	if (!IsValid(SaveSubsystem)) return;
+
+	// Load the save file
+	if (!SaveSubsystem->LoadSaveGame())
+	{
+		RefreshContinueButtonState();
+		return;
+	}
+
+	if (GameplayLevel.IsNull()) return;
+
+	UGameplayStatics::OpenLevelBySoftObjectPtr(this, GameplayLevel);
 }
 
 void UMainMenuWidget::OnSettingsButtonClicked_Implementation()

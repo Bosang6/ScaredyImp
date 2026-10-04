@@ -34,6 +34,7 @@ public:
 	bool ApplySaveGame(AScaredyImpCharacter* Character);
 	
 private:
+	UPROPERTY(Transient)
 	TObjectPtr<UScaredyImpSaveGame> CurrentSaveGame;
 
 	bool bPendingApply = false;
