@@ -7,6 +7,8 @@
 
 class UScaredyImpSaveSubsystem;
 class UScaredyImpGameFlowSubsystem;
+class UScaredyImpUISubsystem;
+class APlayerController;
 
 UCLASS()
 class SCAREDYIMP_API UScaredyImpFunctionLibrary : public UBlueprintFunctionLibrary
@@ -14,6 +16,7 @@ class SCAREDYIMP_API UScaredyImpFunctionLibrary : public UBlueprintFunctionLibra
 	GENERATED_BODY()
 
 public:
+	// ============== Game Instance Subsystems =======================
 	/*
 	* meta = (WorldContext = "WorldContextObject")
 	* When this function is called within a Blueprint, UE will automatically use the current Blueprint's World Context.
@@ -23,4 +26,8 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "ScaredyImp|Game Flow", meta = (WorldContext = "WorldContextObject"))
 	static UScaredyImpGameFlowSubsystem* GetGameFlowSubsystem(const UObject* WorldContextObject);
+
+	// ============== Local Player Subsystems =======================
+	UFUNCTION(BlueprintPure, Category = "ScaredyImp|UI")
+	static UScaredyImpUISubsystem* GetUISubsystem(APlayerController* PlayerController);
 };

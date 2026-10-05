@@ -5,6 +5,7 @@
 #include "UI/ScaredyImpUISubsystem.h"
 #include "UI/PopupWidget.h"
 #include "Save/ScaredyImpSaveSubsystem.h"
+#include "Cores/ScaredyImpGameFlowSubsystem.h"
 #include "Kismet/GameplayStatics.h"
 #include "Utilities/ScaredyImpFunctionLibrary.h"
 
@@ -81,23 +82,38 @@ void UMainMenuWidget::NativeDestruct()
 
 void UMainMenuWidget::OnNewGameClicked_Implementation()
 {
+	UScaredyImpSaveSubsystem* SaveSubsystem = UScaredyImpFunctionLibrary::GetSaveSubsystem(this);
+	if (!IsValid(SaveSubsystem)) return;
+
+	// If not exist a game save, start immediately
+	if (!SaveSubsystem->HasSaveGame())
+	{
+		UScaredyImpGameFlowSubsystem* GameFlowSubsystem = UScaredyImpFunctionLibrary::GetGameFlowSubsystem(this);
+		if (!IsValid(GameFlowSubsystem)) return;
+
+		GameFlowSubsystem->StartNewGame(GameplayLevel);
+		return;
+	}
+
+	// Ask player for confirmation
+	APlayerController* PlayerController = GetOwningPlayer();
+	if (!IsValid(PlayerController)) return;
+
+	UScaredyImpUISubsystem* UISubsystem = UScaredyImpFunctionLibrary::GetUISubsystem(PlayerController);
+	if (!IsValid(UISubsystem)) return;
+
+	UISubsystem->ShowPopup(EPopupType::ConfirmNewGame);
 }
 
 void UMainMenuWidget::OnContinueButtonClicked_Implementation()
 {
-	UScaredyImpSaveSubsystem* SaveSubsystem = UScaredyImpFunctionLibrary::GetSaveSubsystem(this);
-	if (!IsValid(SaveSubsystem)) return;
+	UScaredyImpGameFlowSubsystem* GameFlowSubsystem = UScaredyImpFunctionLibrary::GetGameFlowSubsystem(this);
+	if (!IsValid(GameFlowSubsystem)) return;
 
-	// Load the save file
-	if (!SaveSubsystem->LoadSaveGame())
+	if (!GameFlowSubsystem->ContinueGame(GameplayLevel))
 	{
 		RefreshContinueButtonState();
-		return;
 	}
-
-	if (GameplayLevel.IsNull()) return;
-
-	UGameplayStatics::OpenLevelBySoftObjectPtr(this, GameplayLevel);
 }
 
 void UMainMenuWidget::OnSettingsButtonClicked_Implementation()
