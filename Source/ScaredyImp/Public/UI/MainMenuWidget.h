@@ -48,7 +48,4 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> QuitButton;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Main Menu")
-	TSoftObjectPtr<UWorld> GameplayLevel;
 };

@@ -91,7 +91,7 @@ void UMainMenuWidget::OnNewGameClicked_Implementation()
 		UScaredyImpGameFlowSubsystem* GameFlowSubsystem = UScaredyImpFunctionLibrary::GetGameFlowSubsystem(this);
 		if (!IsValid(GameFlowSubsystem)) return;
 
-		GameFlowSubsystem->StartNewGame(GameplayLevel);
+		GameFlowSubsystem->StartNewGame();
 		return;
 	}
 
@@ -110,7 +110,7 @@ void UMainMenuWidget::OnContinueButtonClicked_Implementation()
 	UScaredyImpGameFlowSubsystem* GameFlowSubsystem = UScaredyImpFunctionLibrary::GetGameFlowSubsystem(this);
 	if (!IsValid(GameFlowSubsystem)) return;
 
-	if (!GameFlowSubsystem->ContinueGame(GameplayLevel))
+	if (!GameFlowSubsystem->ContinueGame())
 	{
 		RefreshContinueButtonState();
 	}

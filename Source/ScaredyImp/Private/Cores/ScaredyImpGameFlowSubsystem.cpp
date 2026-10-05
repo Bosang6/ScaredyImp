@@ -3,8 +3,10 @@
 #include "Kismet/GameplayStatics.h"
 #include "Save/ScaredyImpSaveSubsystem.h"
 #include "Utilities/ScaredyImpFunctionLibrary.h"
+#include "Cores/ScaredyImpGameFlowSettings.h"
+#include "Cores/ScaredyImpGameFlowConfig.h"
 
-bool UScaredyImpGameFlowSubsystem::StartNewGame(const TSoftObjectPtr<UWorld>& GameplayLevel)
+bool UScaredyImpGameFlowSubsystem::StartNewGame()
 {
 	UScaredyImpSaveSubsystem* SaveSubsystem = UScaredyImpFunctionLibrary::GetSaveSubsystem(this);
 	if (!IsValid(SaveSubsystem)) return false;
@@ -12,10 +14,10 @@ bool UScaredyImpGameFlowSubsystem::StartNewGame(const TSoftObjectPtr<UWorld>& Ga
 	// Delete previous save
 	if (!SaveSubsystem->DeleteSaveGame()) return false;
 
-	return OpenGameplayLevel(GameplayLevel);
+	return OpenGameplayLevel();
 }
 
-bool UScaredyImpGameFlowSubsystem::ContinueGame(const TSoftObjectPtr<UWorld>& GameplayLevel)
+bool UScaredyImpGameFlowSubsystem::ContinueGame()
 {
 	UScaredyImpSaveSubsystem* SaveSubsystem = UScaredyImpFunctionLibrary::GetSaveSubsystem(this);
 	if (!IsValid(SaveSubsystem)) return false;
@@ -23,14 +25,27 @@ bool UScaredyImpGameFlowSubsystem::ContinueGame(const TSoftObjectPtr<UWorld>& Ga
 	// Load current save from disk
 	if (!SaveSubsystem->LoadSaveGame()) return false;
 
-	return OpenGameplayLevel(GameplayLevel);
+	return OpenGameplayLevel();
 }
 
-bool UScaredyImpGameFlowSubsystem::OpenGameplayLevel(const TSoftObjectPtr<UWorld>& GameplayLevel)
+bool UScaredyImpGameFlowSubsystem::OpenGameplayLevel()
 {
-	if (GameplayLevel.IsNull()) return false;
+	const UScaredyImpGameFlowConfig* Config = GetGameFlowConfig();
+	if (!IsValid(Config)) return false;
 
-	UGameplayStatics::OpenLevelBySoftObjectPtr(this, GameplayLevel);
+	if (Config->GameplayLevel.IsNull()) return false;
+
+	UGameplayStatics::OpenLevelBySoftObjectPtr(this, Config->GameplayLevel);
 
 	return true;
+}
+
+const UScaredyImpGameFlowConfig* UScaredyImpGameFlowSubsystem::GetGameFlowConfig() const
+{
+	const UScaredyImpGameFlowSettings* Settings = GetDefault<UScaredyImpGameFlowSettings>();
+	if (!IsValid(Settings)) return nullptr;
+
+	if (Settings->GameFlowConfig.IsNull()) return nullptr;
+
+	return Settings->GameFlowConfig.LoadSynchronous();
 }

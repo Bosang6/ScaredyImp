@@ -5,6 +5,8 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "ScaredyImpGameFlowSubsystem.generated.h"
 
+class UScaredyImpGameFlowConfig;
+
 UCLASS()
 class SCAREDYIMP_API UScaredyImpGameFlowSubsystem : public UGameInstanceSubsystem
 {
@@ -12,11 +14,13 @@ class SCAREDYIMP_API UScaredyImpGameFlowSubsystem : public UGameInstanceSubsyste
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Game Flow")
-	bool StartNewGame(const TSoftObjectPtr<UWorld>& GameplayLevel);
+	bool StartNewGame();
 	
 	UFUNCTION(BlueprintCallable, Category = "Game Flow")
-	bool ContinueGame(const TSoftObjectPtr<UWorld>& GameplayLevel);
+	bool ContinueGame();
 
 private:
-	bool OpenGameplayLevel(const TSoftObjectPtr<UWorld>& GameplayLevel);
+	bool OpenGameplayLevel();
+
+	const UScaredyImpGameFlowConfig* GetGameFlowConfig() const;
 };
