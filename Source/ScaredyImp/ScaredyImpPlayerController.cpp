@@ -8,6 +8,7 @@
 #include "UI/ScaredyImpUISubsystem.h"
 #include "EnhancedInputComponent.h"
 #include "Save/ScaredyImpSaveSubsystem.h"
+#include "Utilities/ScaredyImpFunctionLibrary.h"
 
 void AScaredyImpPlayerController::BeginPlay()
 {
@@ -105,10 +106,7 @@ void AScaredyImpPlayerController::OnCharacterReady(AScaredyImpCharacter* InChara
 
 	InCharacter->OnCharacterReady.RemoveAll(this);
 
-	UGameInstance* GameInstance = GetGameInstance();
-	if (!IsValid(GameInstance)) return;
-
-	UScaredyImpSaveSubsystem* SaveSubsystem = GameInstance->GetSubsystem<UScaredyImpSaveSubsystem>();
+	UScaredyImpSaveSubsystem* SaveSubsystem = UScaredyImpFunctionLibrary::GetSaveSubsystem(this);
 	if (!IsValid(SaveSubsystem)) return;
 
 	SaveSubsystem->ApplySaveGame(InCharacter);

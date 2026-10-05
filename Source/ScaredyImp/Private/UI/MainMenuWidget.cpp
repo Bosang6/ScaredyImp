@@ -6,6 +6,7 @@
 #include "UI/PopupWidget.h"
 #include "Save/ScaredyImpSaveSubsystem.h"
 #include "Kismet/GameplayStatics.h"
+#include "Utilities/ScaredyImpFunctionLibrary.h"
 
 void UMainMenuWidget::SetContinueBtnEnabled(bool bEnabled)
 {
@@ -16,14 +17,7 @@ void UMainMenuWidget::SetContinueBtnEnabled(bool bEnabled)
 
 void UMainMenuWidget::RefreshContinueButtonState()
 {
-	UGameInstance* GameInstance = GetGameInstance();
-	if (!IsValid(GameInstance))
-	{
-		SetContinueBtnEnabled(false);
-		return;
-	}
-
-	UScaredyImpSaveSubsystem* SaveSubsystem = GameInstance->GetSubsystem<UScaredyImpSaveSubsystem>();
+	UScaredyImpSaveSubsystem* SaveSubsystem = UScaredyImpFunctionLibrary::GetSaveSubsystem(this);
 	if (!IsValid(SaveSubsystem))
 	{
 		SetContinueBtnEnabled(false);
@@ -91,10 +85,7 @@ void UMainMenuWidget::OnNewGameClicked_Implementation()
 
 void UMainMenuWidget::OnContinueButtonClicked_Implementation()
 {
-	UGameInstance* GameInstance = GetGameInstance();
-	if (!IsValid(GameInstance)) return;
-
-	UScaredyImpSaveSubsystem* SaveSubsystem = GameInstance->GetSubsystem<UScaredyImpSaveSubsystem>();
+	UScaredyImpSaveSubsystem* SaveSubsystem = UScaredyImpFunctionLibrary::GetSaveSubsystem(this);
 	if (!IsValid(SaveSubsystem)) return;
 
 	// Load the save file
