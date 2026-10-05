@@ -13,6 +13,10 @@ class SCAREDYIMP_API UScaredyImpFunctionLibrary : public UBlueprintFunctionLibra
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintPure, Category = "ScaredyImp|Save")
+	/*
+	* meta = (WorldContext = "WorldContextObject")
+	* When this function is called within a Blueprint, UE will automatically use the current Blueprint's World Context.
+	*/ 
+	UFUNCTION(BlueprintPure, Category = "ScaredyImp|Save", meta = (WorldContext = "WorldContextObject"))
 	static UScaredyImpSaveSubsystem* GetSaveSubsystem(const UObject* WorldContextObject);
 };
