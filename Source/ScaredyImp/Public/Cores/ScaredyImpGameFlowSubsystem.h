@@ -11,8 +11,10 @@ class SCAREDYIMP_API UScaredyImpGameFlowSubsystem : public UGameInstanceSubsyste
 	GENERATED_BODY()
 
 public:
+	UFUNCTION(BlueprintCallable, Category = "Game Flow")
 	bool StartNewGame(const TSoftObjectPtr<UWorld>& GameplayLevel);
 	
+	UFUNCTION(BlueprintCallable, Category = "Game Flow")
 	bool ContinueGame(const TSoftObjectPtr<UWorld>& GameplayLevel);
 
 private:
