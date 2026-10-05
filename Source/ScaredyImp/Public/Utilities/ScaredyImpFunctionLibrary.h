@@ -6,6 +6,7 @@
 #include "ScaredyImpFunctionLibrary.generated.h"
 
 class UScaredyImpSaveSubsystem;
+class UScaredyImpGameFlowSubsystem;
 
 UCLASS()
 class SCAREDYIMP_API UScaredyImpFunctionLibrary : public UBlueprintFunctionLibrary
@@ -19,4 +20,7 @@ public:
 	*/ 
 	UFUNCTION(BlueprintPure, Category = "ScaredyImp|Save", meta = (WorldContext = "WorldContextObject"))
 	static UScaredyImpSaveSubsystem* GetSaveSubsystem(const UObject* WorldContextObject);
+
+	UFUNCTION(BlueprintPure, Category = "ScaredyImp|Game Flow", meta = (WorldContext = "WorldContextObject"))
+	static UScaredyImpGameFlowSubsystem* GetGameFlowSubsystem(const UObject* WorldContextObject);
 };
