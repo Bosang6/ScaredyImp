@@ -6,6 +6,8 @@
 #include "Save/ScaredyImpSaveGame.h"
 #include "ScaredyImpSaveSubsystem.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnGameSaved)
+
 class UScaredyImpSaveGame;
 class AScaredyImpCharacter;
 
@@ -32,6 +34,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Save")
 	bool ApplySaveGame(AScaredyImpCharacter* Character);
+
+public:
+	FOnGameSaved OnGameSaved;
 	
 private:
 	UPROPERTY(Transient)

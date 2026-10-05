@@ -13,6 +13,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
 #include "Blueprint/UserWidget.h"
+#include "Save/ScaredyImpSaveSubsystem.h"
+#include "Utilities/ScaredyImpFunctionLibrary.h"
 
 void UScaredyImpUISubsystem::Initialize(FSubsystemCollectionBase& CollectionBase)
 {
@@ -34,6 +36,12 @@ void UScaredyImpUISubsystem::Initialize(FSubsystemCollectionBase& CollectionBase
 	{
 		UpdatePlayerControllerBinding(PlayerController);
 	}
+
+	UScaredyImpSaveSubsystem* SaveSubsystem = UScaredyImpFunctionLibrary::GetSaveSubsystem(this);
+	if (IsValid(SaveSubsystem))
+	{
+		SaveSubsystem->OnGameSaved.AddUObject(this, &UScaredyImpUISubsystem::OnGameSaved);
+	}
 }
 
 void UScaredyImpUISubsystem::Deinitialize()
@@ -44,6 +52,12 @@ void UScaredyImpUISubsystem::Deinitialize()
 	UnbindFromPlayerController();
 
 	UIConfig = nullptr;
+
+	UScaredyImpSaveSubsystem* SaveSubsystem = UScaredyImpFunctionLibrary::GetSaveSubsystem(this);
+	if (IsValid(SaveSubsystem))
+	{
+		SaveSubsystem->OnGameSaved.RemoveAll(this);
+	}
 
 	Super::Deinitialize();
 }
@@ -305,6 +319,11 @@ void UScaredyImpUISubsystem::HideAutoSaveWidget()
 void UScaredyImpUISubsystem::OnPlayerDeath()
 {
 	ShowPopup(EPopupType::GameOver);
+}
+
+void UScaredyImpUISubsystem::OnGameSaved()
+{
+	ShowAutoSaveWidget();
 }
 
 void UScaredyImpUISubsystem::EnterUIContext(EScaredyImpUIContext Context)

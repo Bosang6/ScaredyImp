@@ -82,6 +82,9 @@ bool UScaredyImpSaveSubsystem::SaveGame(const FScaredyImpPlayerSaveData& PlayerD
 
 	CurrentSaveGame = SaveGameObject;
 
+	// For UI
+	OnGameSaved.Broadcast();
+
 	return true;
 }
 

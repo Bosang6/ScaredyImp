@@ -58,12 +58,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UI|Popup")
 	void ClosePopup();
 
-	UFUNCTION(BlueprintCallable, Category = "UI|Notification")
 	void ShowAutoSaveWidget();
 	void HideAutoSaveWidget();
 
 	UFUNCTION()
 	void OnPlayerDeath();
+
+	void OnGameSaved();
 
 private:
 	void EnterUIContext(EScaredyImpUIContext Context);
