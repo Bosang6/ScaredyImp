@@ -13,6 +13,7 @@ class AEnemyBase;
 class APawn;
 class UPopupWidget;
 class AScaredyImpCharacter;
+class UUserWidget;
 enum class EPopupType : uint8;
 
 UENUM()
@@ -57,6 +58,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UI|Popup")
 	void ClosePopup();
 
+	UFUNCTION(BlueprintCallable, Category = "UI|Notification")
+	void ShowAutoSaveWidget();
+	void HideAutoSaveWidget();
+
 	UFUNCTION()
 	void OnPlayerDeath();
 
@@ -97,6 +102,11 @@ private:
 
 	UPROPERTY(Transient)
 	TObjectPtr<UPopupWidget> ActivePopupWidget;
+
+	UPROPERTY(Transient)
+	TObjectPtr<UUserWidget> AutoSaveWidget;
+
+	FTimerHandle AutoSaveWidgetTimerHandle;
 
 	TWeakObjectPtr<APlayerController> BoundPlayerController;
 };

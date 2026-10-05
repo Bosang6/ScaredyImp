@@ -41,6 +41,8 @@ void UHUDWidget::ShowNotification(UUserWidget* NotificationWidget)
 {
 	if (!IsValid(NotificationWidget) || !IsValid(NotificationLayer)) return;
 
+	NotificationLayer->ClearChildren();
+
 	NotificationLayer->AddChildToOverlay(NotificationWidget);
 }
 
@@ -48,7 +50,7 @@ void UHUDWidget::RemoveNotification(UUserWidget* NotificationWidget)
 {
 	if (!IsValid(NotificationWidget) || !IsValid(NotificationLayer)) return;
 
-	NotificationLayer->RemoveFromParent();
+	NotificationWidget->RemoveFromParent();
 }
 
 void UHUDWidget::NativeConstruct()

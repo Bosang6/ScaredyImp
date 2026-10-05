@@ -29,4 +29,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI|Popup")
 	TMap<EPopupType, TSubclassOf<UPopupWidget>> PopupWidgetClasses;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI|Notification")
+	TSubclassOf<UUserWidget> AutoSaveWidgetClass;
 };

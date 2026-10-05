@@ -11,6 +11,8 @@
 #include "Enemies/EnemyBase.h"
 #include "Comps/HealthComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "TimerManager.h"
+#include "Blueprint/UserWidget.h"
 
 void UScaredyImpUISubsystem::Initialize(FSubsystemCollectionBase& CollectionBase)
 {
@@ -241,6 +243,63 @@ void UScaredyImpUISubsystem::ClosePopup()
 
 	// Hide Cursor
 	RestoreGameInputMode();
+}
+
+void UScaredyImpUISubsystem::ShowAutoSaveWidget()
+{
+	if (!IsValid(UIConfig)) return;
+	if (!UIConfig->AutoSaveWidgetClass) return;
+	if (!IsValid(GameplayHUDWidget)) return;
+
+	UWorld* World = GetWorld();
+	if (!IsValid(World)) return;
+
+	// Cancle the previous hide timer
+	World->GetTimerManager().ClearTimer(AutoSaveWidgetTimerHandle);
+
+	// Remove the previous notification
+	if (IsValid(AutoSaveWidget))
+	{
+		GameplayHUDWidget->RemoveNotification(AutoSaveWidget);
+
+		AutoSaveWidget = nullptr;
+	}
+
+	APlayerController* PlayerController = GetOwningPlayerController();
+	if (!IsValid(PlayerController)) return;
+
+	AutoSaveWidget = CreateWidget<UUserWidget>(PlayerController, UIConfig->AutoSaveWidgetClass);
+	if (!IsValid(AutoSaveWidget)) return;
+
+	GameplayHUDWidget->ShowNotification(AutoSaveWidget);
+
+	World->GetTimerManager().SetTimer(
+		AutoSaveWidgetTimerHandle,
+		this,
+		&UScaredyImpUISubsystem::HideAutoSaveWidget,
+		2.0f,
+		false
+	);
+}
+
+void UScaredyImpUISubsystem::HideAutoSaveWidget()
+{
+	if (!IsValid(AutoSaveWidget))
+	{
+		AutoSaveWidget = nullptr;
+		return;
+	}
+
+	if (IsValid(GameplayHUDWidget))
+	{
+		GameplayHUDWidget->RemoveNotification(AutoSaveWidget);
+	}
+	else
+	{
+		AutoSaveWidget->RemoveFromParent();
+	}
+
+	AutoSaveWidget = nullptr;
 }
 
 void UScaredyImpUISubsystem::OnPlayerDeath()
