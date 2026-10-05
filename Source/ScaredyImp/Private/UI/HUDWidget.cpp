@@ -5,6 +5,7 @@
 #include "UI/BossStatusWidget.h"
 #include "Enemies/EnemyBase.h"
 #include "ScaredyImpCharacter.h"
+#include "Components/Overlay.h"
 
 void UHUDWidget::BindToCharacter(AScaredyImpCharacter* Character)
 {
@@ -34,6 +35,20 @@ void UHUDWidget::HideBossStatus()
 
 	BossStatusWidget->UnbindFromBoss();
 	BossStatusWidget->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void UHUDWidget::ShowNotification(UUserWidget* NotificationWidget)
+{
+	if (!IsValid(NotificationWidget) || !IsValid(NotificationLayer)) return;
+
+	NotificationLayer->AddChildToOverlay(NotificationWidget);
+}
+
+void UHUDWidget::RemoveNotification(UUserWidget* NotificationWidget)
+{
+	if (!IsValid(NotificationWidget) || !IsValid(NotificationLayer)) return;
+
+	NotificationLayer->RemoveFromParent();
 }
 
 void UHUDWidget::NativeConstruct()

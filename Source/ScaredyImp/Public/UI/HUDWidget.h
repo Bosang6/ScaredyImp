@@ -9,6 +9,7 @@ class AScaredyImpCharacter;
 class UPlayerStatusWidget;
 class AEnemyBase;
 class UBossStatusWidget;
+class UOverlay;
 
 UCLASS()
 class SCAREDYIMP_API UHUDWidget : public UUserWidget
@@ -22,6 +23,9 @@ public:
 	void ShowBossStatus(AEnemyBase* Boss);
 	void HideBossStatus();
 
+	void ShowNotification(UUserWidget* NotificationWidget);
+	void RemoveNotification(UUserWidget* NotificationWidget);
+
 protected:
 	virtual void NativeConstruct() override;
 
@@ -31,4 +35,7 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UBossStatusWidget> BossStatusWidget;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UOverlay> NotificationLayer;
 };
