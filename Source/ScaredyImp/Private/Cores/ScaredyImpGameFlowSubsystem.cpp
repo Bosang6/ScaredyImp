@@ -8,6 +8,8 @@
 #include "GameFramework/PlayerController.h"
 #include "Engine/World.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "UI/ScaredyImpUISubsystem.h"
+#include "UI/PopupWidget.h"
 
 bool UScaredyImpGameFlowSubsystem::StartNewGame()
 {
@@ -34,6 +36,23 @@ bool UScaredyImpGameFlowSubsystem::ContinueGame()
 bool UScaredyImpGameFlowSubsystem::ReturnToMainMenu()
 {
 	return OpenMainMenu();
+}
+
+bool UScaredyImpGameFlowSubsystem::CompleteGame(APlayerController* PlayerController)
+{
+	UScaredyImpSaveSubsystem* SaveSubsystem = UScaredyImpFunctionLibrary::GetSaveSubsystem(this);
+	if (!IsValid(SaveSubsystem)) return false;
+
+	// Delete Save Game
+	if (!SaveSubsystem->DeleteSaveGame()) return false;
+
+	// Show Victory Popup
+	UScaredyImpUISubsystem* UISubsystem = UScaredyImpFunctionLibrary::GetUISubsystem(PlayerController);
+	if (!IsValid(UISubsystem)) return false;
+
+	UISubsystem->ShowPopup(EPopupType::Victory);
+
+	return true;
 }
 
 void UScaredyImpGameFlowSubsystem::QuitGame()

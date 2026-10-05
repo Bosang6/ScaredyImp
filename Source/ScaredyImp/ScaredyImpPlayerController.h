@@ -23,6 +23,9 @@ protected:
 	void OnPausePressed();
 
 	void OnCharacterReady(AScaredyImpCharacter* Character);
+
+	UFUNCTION()
+	void OnGameCompleted();
 	
 protected:
 	UPROPERTY(EditAnywhere, Category ="Input|Input Mappings")

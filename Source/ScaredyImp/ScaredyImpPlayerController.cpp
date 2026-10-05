@@ -9,6 +9,10 @@
 #include "EnhancedInputComponent.h"
 #include "Save/ScaredyImpSaveSubsystem.h"
 #include "Utilities/ScaredyImpFunctionLibrary.h"
+#include "Cores/ScaredyImpGameFlowSubsystem.h"
+#include "Pickups/GameEndPickup.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 void AScaredyImpPlayerController::BeginPlay()
 {
@@ -21,6 +25,13 @@ void AScaredyImpPlayerController::BeginPlay()
 	}
 
 	if (!IsLocalPlayerController()) return;
+
+	// There is only one GameEnd Pickup in the level
+	AGameEndPickup* GameEndPickup = Cast<AGameEndPickup>(UGameplayStatics::GetActorOfClass(this, AGameEndPickup::StaticClass()));
+	if (IsValid(GameEndPickup))
+	{
+		GameEndPickup->OnGameEnded.AddUniqueDynamic(this, &AScaredyImpPlayerController::OnGameCompleted);
+	}
 
 	FInputModeGameOnly InputMode;
 	SetInputMode(InputMode);
@@ -110,4 +121,27 @@ void AScaredyImpPlayerController::OnCharacterReady(AScaredyImpCharacter* InChara
 	if (!IsValid(SaveSubsystem)) return;
 
 	SaveSubsystem->ApplySaveGame(InCharacter);
+}
+
+void AScaredyImpPlayerController::OnGameCompleted()
+{
+	// Player stop moving
+	AScaredyImpCharacter* PlayerCharacter = Cast<AScaredyImpCharacter>(GetPawn());
+	if (IsValid(PlayerCharacter))
+	{
+		PlayerCharacter->StopJumping();
+
+		if (UCharacterMovementComponent* Movement = PlayerCharacter->GetCharacterMovement())
+		{
+			Movement->StopMovementImmediately();
+			Movement->DisableMovement();
+		}
+
+		SetIgnoreMoveInput(true);
+	}
+
+	UScaredyImpGameFlowSubsystem* GameFlowSubsystem = UScaredyImpFunctionLibrary::GetGameFlowSubsystem(this);
+	if (!IsValid(GameFlowSubsystem)) return;
+
+	GameFlowSubsystem->CompleteGame(this);
 }
