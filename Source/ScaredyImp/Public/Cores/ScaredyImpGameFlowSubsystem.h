@@ -19,8 +19,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Game Flow")
 	bool ContinueGame();
 
+	UFUNCTION(BlueprintCallable, Category = "Game Flow")
+	bool ReturnToMainMenu();
+
+	UFUNCTION(BlueprintCallable, Category = "Game Flow")
+	void QuitGame();
+
 private:
 	bool OpenGameplayLevel();
+	bool OpenMainMenu();
+
+	bool OpenLevel(const TSoftObjectPtr<UWorld>& Level);
 
 	const UScaredyImpGameFlowConfig* GetGameFlowConfig() const;
 };

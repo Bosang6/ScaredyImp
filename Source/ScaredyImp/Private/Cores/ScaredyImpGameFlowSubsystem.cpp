@@ -5,6 +5,9 @@
 #include "Utilities/ScaredyImpFunctionLibrary.h"
 #include "Cores/ScaredyImpGameFlowSettings.h"
 #include "Cores/ScaredyImpGameFlowConfig.h"
+#include "GameFramework/PlayerController.h"
+#include "Engine/World.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 bool UScaredyImpGameFlowSubsystem::StartNewGame()
 {
@@ -28,6 +31,30 @@ bool UScaredyImpGameFlowSubsystem::ContinueGame()
 	return OpenGameplayLevel();
 }
 
+bool UScaredyImpGameFlowSubsystem::ReturnToMainMenu()
+{
+	return OpenMainMenu();
+}
+
+void UScaredyImpGameFlowSubsystem::QuitGame()
+{
+	UGameInstance* GameInstance = GetGameInstance();
+	if (!IsValid(GameInstance)) return;
+
+	UWorld* World = GameInstance->GetWorld();
+	if (!IsValid(World)) return;
+
+	APlayerController* PlayerController = World->GetFirstPlayerController();
+	if (!IsValid(PlayerController)) return;
+
+	UKismetSystemLibrary::QuitGame(
+		World,
+		PlayerController,
+		EQuitPreference::Quit,
+		false
+	);
+}
+
 bool UScaredyImpGameFlowSubsystem::OpenGameplayLevel()
 {
 	const UScaredyImpGameFlowConfig* Config = GetGameFlowConfig();
@@ -35,7 +62,24 @@ bool UScaredyImpGameFlowSubsystem::OpenGameplayLevel()
 
 	if (Config->GameplayLevel.IsNull()) return false;
 
-	UGameplayStatics::OpenLevelBySoftObjectPtr(this, Config->GameplayLevel);
+	return OpenLevel(Config->GameplayLevel);
+}
+
+bool UScaredyImpGameFlowSubsystem::OpenMainMenu()
+{
+	const UScaredyImpGameFlowConfig* Config = GetGameFlowConfig();
+	if (!IsValid(Config)) return false;
+
+	if (Config->MainMenuLevel.IsNull()) return false;
+
+	return OpenLevel(Config->MainMenuLevel);
+}
+
+bool UScaredyImpGameFlowSubsystem::OpenLevel(const TSoftObjectPtr<UWorld>& Level)
+{
+	if (Level.IsNull()) return false;
+
+	UGameplayStatics::OpenLevelBySoftObjectPtr(this, Level);
 
 	return true;
 }
