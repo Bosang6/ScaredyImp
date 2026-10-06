@@ -15,6 +15,8 @@
 #include "Comps/StompComponent.h"
 #include "ScaredyImp.h"
 #include "Checkpoint/CheckpointSubsystem.h"
+#include "Utilities/ScaredyImpFunctionLibrary.h"
+#include "Save/ScaredyImpSaveSubsystem.h"
 
 AScaredyImpCharacter::AScaredyImpCharacter()
 {
@@ -215,7 +217,20 @@ void AScaredyImpCharacter::HandleVoid_Implementation()
 
 	SetActorTransform(CheckpointSubsystem->GetRecoveryTransform());
 
-	UE_LOG(LogScaredyImp, Warning, TEXT("[Player] HandleVoid"));
+	// Save after recovering to a checkpoint
+	// Level-start recovering will not create a new save
+	if (!CheckpointSubsystem->HasActiveCheckpoint())
+	{
+		return;
+	}
+
+	UScaredyImpSaveSubsystem* SaveSubsystem = UScaredyImpFunctionLibrary::GetSaveSubsystem(this);
+	if (!IsValid(SaveSubsystem)) return;
+
+	if (SaveSubsystem->SaveAtCheckpoint(this))
+	{
+		CheckpointSubsystem->MarkCurrentCheckpointSaved();
+	}
 }
 
 // Disable player input when a character dies.
