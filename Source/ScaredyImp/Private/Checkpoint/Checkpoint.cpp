@@ -7,6 +7,7 @@
 #include "ScaredyImp.h"
 #include "Save/ScaredyImpSaveSubsystem.h"
 #include "ScaredyImpCharacter.h"
+#include "Utilities/ScaredyImpFunctionLibrary.h"
 
 ACheckpoint::ACheckpoint()
 {
@@ -51,10 +52,19 @@ void ACheckpoint::OnTriggerBoxBeginOverlap(UPrimitiveComponent* OverlappedCompon
 	// Record checkpoint
 	CheckpointSubsystem->ActivateCheckpoint(RespawnPoint->GetComponentTransform());
 
-	// Auto Save Game
-	if (UScaredyImpSaveSubsystem* SaveSubsystem = GetGameInstance()->GetSubsystem<UScaredyImpSaveSubsystem>())
+	// If this checkpoint has already been saved, do not save repeatedly.
+	if (CheckpointSubsystem->HasSavedCurrentCheckpoint())
 	{
-		SaveSubsystem->SaveAtCheckpoint(Character);
+		return;
+	}
+
+	// Auto Save Game
+	if (UScaredyImpSaveSubsystem* SaveSubsystem = UScaredyImpFunctionLibrary::GetSaveSubsystem(this))
+	{
+		if (SaveSubsystem->SaveAtCheckpoint(Character))
+		{
+			CheckpointSubsystem->MarkCurrentCheckpointSaved();
+		}
 	}
 
 	UE_LOG(LogScaredyImp, Warning, TEXT("[Checkpoint] Activate."));

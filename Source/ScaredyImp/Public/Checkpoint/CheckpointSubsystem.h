@@ -37,6 +37,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Checkpoint")
 	const FTransform& GetCurrentCheckpoint() const;
 
+	bool HasSavedCurrentCheckpoint() const;
+	void MarkCurrentCheckpointSaved();
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Level Start", meta = (AllowPrivateAccess = "true"))
 	FTransform LevelStartTransform = FTransform::Identity;
@@ -49,4 +52,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Checkpoint", meta = (AllowPrivateAccess = "true"))
 	bool bHasActiveCheckpoint = false;
+
+	// Prevents repeatedly saving when the player re-enters
+	bool bHasSavedCurrentCheckpoint = false;
 };

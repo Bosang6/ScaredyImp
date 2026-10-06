@@ -37,14 +37,23 @@ const FTransform& UCheckpointSubsystem::GetLevelStartTransform() const
 
 void UCheckpointSubsystem::ActivateCheckpoint(const FTransform& RespawnTransform)
 {
+	const bool bCheckpointChanged = !bHasActiveCheckpoint || !CurrentCheckpoint.Equals(RespawnTransform);
+
 	CurrentCheckpoint = RespawnTransform;
 	bHasActiveCheckpoint = true;
+
+	if (bCheckpointChanged)
+	{
+		bHasSavedCurrentCheckpoint = false;
+	}
 }
 
 void UCheckpointSubsystem::ResetCheckpoint()
 {
 	CurrentCheckpoint = FTransform::Identity;
 	bHasActiveCheckpoint = false;
+
+	bHasSavedCurrentCheckpoint = false;
 }
 
 bool UCheckpointSubsystem::HasActiveCheckpoint() const
@@ -55,4 +64,14 @@ bool UCheckpointSubsystem::HasActiveCheckpoint() const
 const FTransform& UCheckpointSubsystem::GetCurrentCheckpoint() const
 {
 	return CurrentCheckpoint;
+}
+
+bool UCheckpointSubsystem::HasSavedCurrentCheckpoint() const
+{
+	return bHasSavedCurrentCheckpoint;
+}
+
+void UCheckpointSubsystem::MarkCurrentCheckpointSaved()
+{
+	bHasSavedCurrentCheckpoint = true;
 }
