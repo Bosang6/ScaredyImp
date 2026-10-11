@@ -32,5 +32,4 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TMap<FGameplayTag, FScaredyImpSFXData> SFXMap;
-
 };

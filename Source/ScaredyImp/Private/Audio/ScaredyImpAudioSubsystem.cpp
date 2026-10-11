@@ -27,6 +27,16 @@ void UScaredyImpAudioSubsystem::Deinitialize()
 	Super::Deinitialize();
 }
 
+void UScaredyImpAudioSubsystem::SetMusicVolume(float Volume)
+{
+	MusicVolumeMultiplier = FMath::Clamp(Volume, 0.0f, 1.0f);
+}
+
+void UScaredyImpAudioSubsystem::SetSFXVolume(float Volume)
+{
+	SFXVolumeMultiplier = FMath::Clamp(Volume, 0.0f, 1.0f);
+}
+
 void UScaredyImpAudioSubsystem::PlaySFX2D(const FGameplayTag& SFXTag)
 {
 	if (!IsValid(AudioConfig)) return;
@@ -37,6 +47,6 @@ void UScaredyImpAudioSubsystem::PlaySFX2D(const FGameplayTag& SFXTag)
 	UGameplayStatics::PlaySound2D(
 		GetGameInstance(),
 		SFXData->Sound,
-		SFXData->VolumeMultiplier
+		SFXData->VolumeMultiplier * SFXVolumeMultiplier
 	);
 }
