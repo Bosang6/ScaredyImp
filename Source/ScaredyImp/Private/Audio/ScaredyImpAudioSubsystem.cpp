@@ -5,6 +5,7 @@
 #include "Audio/ScaredyImpAudioSettings.h"
 #include "Kismet/GameplayStatics.h"
 
+
 void UScaredyImpAudioSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
@@ -24,4 +25,18 @@ void UScaredyImpAudioSubsystem::Deinitialize()
 	AudioConfig = nullptr;
 
 	Super::Deinitialize();
+}
+
+void UScaredyImpAudioSubsystem::PlaySFX2D(const FGameplayTag& SFXTag)
+{
+	if (!IsValid(AudioConfig)) return;
+
+	const FScaredyImpSFXData* SFXData = AudioConfig->SFXMap.Find(SFXTag);
+	if (!SFXData || !IsValid(SFXData->Sound)) return;
+
+	UGameplayStatics::PlaySound2D(
+		GetGameInstance(),
+		SFXData->Sound,
+		SFXData->VolumeMultiplier
+	);
 }
