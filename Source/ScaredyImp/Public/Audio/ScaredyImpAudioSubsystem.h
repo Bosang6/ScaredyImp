@@ -5,6 +5,8 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "ScaredyImpAudioSubsystem.generated.h"
 
+class UScaredyImpAudioConfig;
+
 UCLASS()
 class SCAREDYIMP_API UScaredyImpAudioSubsystem : public UGameInstanceSubsystem
 {
@@ -13,4 +15,8 @@ class SCAREDYIMP_API UScaredyImpAudioSubsystem : public UGameInstanceSubsystem
 public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
+
+private:
+	UPROPERTY()
+	TObjectPtr<UScaredyImpAudioConfig> AudioConfig;
 };
