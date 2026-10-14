@@ -3,6 +3,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/RotatingMovementComponent.h"
+#include "Audio/ScaredyImpAudioSubsystem.h"
 
 APickupBase::APickupBase()
 {
@@ -42,7 +43,19 @@ void APickupBase::OnPickupBeginOverlap(UPrimitiveComponent* OverlappedComponent,
 
 	if (TryPickup(Character))
 	{
+		PlaySFX();
 		Destroy();
+	}
+}
+
+void APickupBase::PlaySFX()
+{
+	if (PickupSFXTag.IsValid())
+	{
+		if (UScaredyImpAudioSubsystem* AudioSubsystem = GetGameInstance()->GetSubsystem<UScaredyImpAudioSubsystem>())
+		{
+			AudioSubsystem->PlaySFX2D(PickupSFXTag);
+		}
 	}
 }
 

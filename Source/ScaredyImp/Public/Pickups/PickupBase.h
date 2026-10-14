@@ -3,6 +3,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GameplayTagContainer.h"
 #include "PickupBase.generated.h"
 
 class UStaticMeshComponent;
@@ -32,6 +33,9 @@ protected:
 		const FHitResult& SweepResult
 	);
 
+private:
+	void PlaySFX();
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup")
 	TObjectPtr<UStaticMeshComponent> PickupMesh;
@@ -41,4 +45,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup", meta = (ClampMin = "1.0"))
 	float RotationSpeed = 90.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pickup|Audio")
+	FGameplayTag PickupSFXTag;
 };
