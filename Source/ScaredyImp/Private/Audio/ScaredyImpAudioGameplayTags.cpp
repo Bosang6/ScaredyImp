@@ -42,4 +42,14 @@ namespace ScaredyImpAudioGameplayTags
 		Audio_SFX_Pickup_Crown,
 		"Audio.SFX.Pickup.Crown"
 	);
+
+	UE_DEFINE_GAMEPLAY_TAG(
+		Audio_SFX_UI_Hover,
+		"Audio.SFX.UI.Button.Hover"
+	);
+	
+	UE_DEFINE_GAMEPLAY_TAG(
+		Audio_SFX_UI_Clicked,
+		"Audio.SFX.UI.Button.Clicked"
+	);
 }

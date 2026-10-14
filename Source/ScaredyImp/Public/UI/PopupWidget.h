@@ -36,6 +36,12 @@ protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
+	UFUNCTION()
+	void OnButtonHovered();
+
+	UFUNCTION()
+	void OnButtonClicked();
+
 	UFUNCTION(BlueprintNativeEvent, Category = "Popup")
 	void OnConfirmClicked();
 	virtual void OnConfirmClicked_Implementation();
