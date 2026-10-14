@@ -5,6 +5,7 @@
 #include "GameFramework/Character.h"
 #include "Interfaces/Stompable.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Audio/ScaredyImpAudioSubsystem.h"
 
 UStompComponent::UStompComponent()
 {
@@ -118,5 +119,19 @@ void UStompComponent::OnStompBoxBeginOverlap(UPrimitiveComponent* OverlappedComp
 		true,
 		true
 	);
+
+	// PlaySFX
+	PlaySFX();
+}
+
+void UStompComponent::PlaySFX()
+{
+	if (StompSFXTag.IsValid())
+	{
+		if (UScaredyImpAudioSubsystem* AudioSubsystem = Owner->GetGameInstance()->GetSubsystem<UScaredyImpAudioSubsystem>())
+		{
+			AudioSubsystem->PlaySFX2D(StompSFXTag);
+		}
+	}
 }
 

@@ -3,6 +3,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "GameplayTagContainer.h"
 #include "StompComponent.generated.h"
 
 class UBoxComponent;
@@ -29,6 +30,9 @@ protected:
 		const FHitResult& SweepResult
 	);
 
+private:
+	void PlaySFX();
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stomp")
 	int32 StompDamage = 1;
@@ -44,6 +48,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stomp|Collision")
 	FVector StompBoxExtent = FVector(30.0f, 30.0f, 10.0f);
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stomp|Audio")
+	FGameplayTag StompSFXTag;
 
 private: 
 	UPROPERTY()
