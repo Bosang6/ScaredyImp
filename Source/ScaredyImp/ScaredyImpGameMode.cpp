@@ -4,6 +4,9 @@
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
 #include "ScaredyImp.h"
+#include "Audio/ScaredyImpAudioSubsystem.h"
+#include "GameplayTagContainer.h"
+#include "Audio/ScaredyImpAudioGameplayTags.h"
 
 AScaredyImpGameMode::AScaredyImpGameMode()
 {
@@ -64,4 +67,10 @@ void AScaredyImpGameMode::BeginPlay()
 	}
 
 	CheckpointSubsystem->SetLevelStart(PlayerStartActor->GetActorTransform());
+
+	// Play background music
+	if (UScaredyImpAudioSubsystem* AudioSubsystem = GetGameInstance()->GetSubsystem<UScaredyImpAudioSubsystem>())
+	{
+		AudioSubsystem->PlayMusic(ScaredyImpAudioGameplayTags::Audio_Music_Gameplay);
+	}
 }
