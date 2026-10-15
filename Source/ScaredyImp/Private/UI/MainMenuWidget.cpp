@@ -118,6 +118,14 @@ void UMainMenuWidget::OnContinueButtonClicked_Implementation()
 
 void UMainMenuWidget::OnSettingsButtonClicked_Implementation()
 {
+	APlayerController* PlayerController = GetOwningPlayer();
+	if (!IsValid(PlayerController)) return;
+
+	UScaredyImpUISubsystem* UISubsystem = ULocalPlayer::GetSubsystemFromController<UScaredyImpUISubsystem>(PlayerController);
+
+	if (!IsValid(UISubsystem)) return;
+
+	UISubsystem->ShowSettings();
 }
 
 void UMainMenuWidget::OnQuitButtonClicked_Implementation()

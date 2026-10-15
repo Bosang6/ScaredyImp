@@ -53,6 +53,11 @@ public:
 	void ShowBossStatus(AEnemyBase* Boss);
 	void HideBossStatus();
 
+	void ShowSettings();
+
+	UFUNCTION(BlueprintCallable, Category = "UI|Settings")
+	void HideSettings();
+
 	UFUNCTION(BlueprintCallable, Category = "UI|Popup")
 	UPopupWidget* ShowPopup(EPopupType PopupType);
 	UFUNCTION(BlueprintCallable, Category = "UI|Popup")
@@ -103,6 +108,9 @@ private:
 
 	UPROPERTY(Transient)
 	TObjectPtr<UPopupWidget> ActivePopupWidget;
+
+	UPROPERTY(Transient)
+	TObjectPtr<UUserWidget> SettingsWidget;
 
 	UPROPERTY(Transient)
 	TObjectPtr<UUserWidget> AutoSaveWidget;

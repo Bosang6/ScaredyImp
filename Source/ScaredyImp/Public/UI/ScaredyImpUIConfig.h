@@ -32,4 +32,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI|Notification")
 	TSubclassOf<UUserWidget> AutoSaveWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI|Settings")
+	TSubclassOf<UUserWidget> SettingsWidgetClass;
 };

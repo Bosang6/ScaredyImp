@@ -220,6 +220,30 @@ void UScaredyImpUISubsystem::HideBossStatus()
 	GameplayHUDWidget->HideBossStatus();
 }
 
+void UScaredyImpUISubsystem::ShowSettings()
+{
+	if (IsValid(SettingsWidget)) return;
+	if (!IsValid(UIConfig)) return;
+	if (!UIConfig->SettingsWidgetClass) return;
+
+	APlayerController* PlayerController = GetOwningPlayerController();
+	if (!IsValid(PlayerController)) return;
+
+	SettingsWidget = CreateWidget<UUserWidget>(PlayerController, UIConfig->SettingsWidgetClass);
+
+	if (!IsValid(SettingsWidget)) return;
+
+	SettingsWidget->AddToPlayerScreen(100);
+}
+
+void UScaredyImpUISubsystem::HideSettings()
+{
+	if (!IsValid(SettingsWidget)) return;
+
+	SettingsWidget->RemoveFromParent();
+	SettingsWidget = nullptr;
+}
+
 UPopupWidget* UScaredyImpUISubsystem::ShowPopup(EPopupType PopupType)
 {
 	if (!IsValid(UIConfig)) return nullptr;
