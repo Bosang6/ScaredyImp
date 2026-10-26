@@ -64,4 +64,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Health")
 	int32 CurrentHealth = 0;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Health", meta = (ClampMin = "0", ClampMax = "5"))
+	int32 InitHealth = 0;
 };

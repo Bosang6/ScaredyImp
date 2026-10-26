@@ -84,7 +84,14 @@ void UHealthComponent::BeginPlay()
 
 void UHealthComponent::InitComponent()
 {
-	CurrentHealth = MaxHealth;
+	if (InitHealth > 0 && InitHealth < MaxHealth)
+	{
+		CurrentHealth = InitHealth;
+	}
+	else
+	{
+		CurrentHealth = MaxHealth;
+	}
 
 	// For UI
 	OnHealthChanged.Broadcast(CurrentHealth, MaxHealth);
