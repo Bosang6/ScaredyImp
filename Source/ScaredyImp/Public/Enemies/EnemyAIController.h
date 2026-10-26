@@ -1,4 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -10,9 +9,6 @@ class UAIPerceptionComponent;
 class UStateTreeAIComponent;
 class UAISenseConfig_Sight;
 
-/**
- * 
- */
 UCLASS()
 class SCAREDYIMP_API AEnemyAIController : public AAIController
 {
