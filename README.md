@@ -43,6 +43,7 @@ The project combines responsive character controls, AI-driven enemies, and diver
 | W / A / S / D | Move |
 | Space | Jump |
 | Left Shift | Sprint |
+| Esc | Open Menu |
 
 ## Gameplay Demo
 
